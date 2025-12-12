@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Declaración Jurada de Salud - Menor de Edad</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #071107;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(4, 88, 18, 0.1);
+            border-radius: 5px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            position: relative;
+        }
+        
+        .header-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .institution-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0aa34a;
+            margin: 15px 0;
+        }
+        
+        .main-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #097238;
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #3e9914;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        
+        input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .declaration-section {
+            margin: 25px 0;
+        }
+        
+        .declaration-item {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #2bb808;
+            margin-bottom: 20px;
+        }
+        
+        .declaration-text {
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox-item input {
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+        
+        .signature-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .signature-box {
+            height: 100px;
+            border: 1px dashed #aaa;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            background-color: #fdfdfd;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #777;
+            font-style: italic;
+        }
+        
+        .signature-box canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #d5dbdb;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .footnote {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .page-break {
+            page-break-before: always;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #ccc;
+        }
+        
+        .fingerprint-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .fingerprint-box {
+            display: inline-block;
+            width: 200px;
+            height: 150px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+            background-color: #fdfdfd;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fingerprint-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: white;
+        }
+        
+        .fingerprint-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #aaa;
+            font-style: italic;
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+        }
+        
+        .fingerprint-label {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 3px 0;
+        }
+        
+        .upload-controls {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .upload-btn {
+            padding: 8px 15px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .upload-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .remove-btn {
+            padding: 8px 15px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .remove-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .upload-instructions {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 10px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .warning-box {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .date-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .date-inputs input {
+            flex: 1;
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            
+            .button-group, .upload-controls {
+                display: none;
+            }
+            
+            .checkbox-item input {
+                transform: scale(1.2);
+            }
+            
+            .fingerprint-box {
+                border: 1px solid #000;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .upload-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .date-inputs {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-line">
+                <div>IESTP María Rosario Araoz Pinto</div>
+                <div>Ministerio de Educación</div>
+            </div>
+            
+            <div class="institution-name">
+                INSTITUTO DE EDUCACIÓN SUPERIOR TECNOLÓGICO PÚBLICO<br>
+                MARÍA ROSARIO ARAOZ PINTO
+            </div>
+            
+            <h1 class="main-title">DECLARACIÓN JURADA DE SALUD</h1>
+            <h2 class="subtitle">(DE NO PADECER COVID-19)</h2>
+        </div>
+        
+        <form id="healthDeclarationForm">
+            <div class="warning-box">
+                <strong>NOTA:</strong> Este formulario debe ser completado por el padre, madre o apoderado del postulante menor de edad.
+            </div>
+            
+            <div class="form-section">
+                <h3 class="section-title">DATOS DEL PADRE, MADRE O APODERADO</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="apoderadoNombre" class="required">Yo, (Nombre y apellidos del apoderado)</label>
+                        <input type="text" id="apoderadoNombre" name="apoderadoNombre" placeholder="Ej: JOSE FERNANDO GUERRERO SANCHEZ" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="apoderadoDocTipo" class="required">Identificado(a) con</label>
+                        <select id="apoderadoDocTipo" name="apoderadoDocTipo" required>
+                            <option value="">Seleccione tipo</option>
+                            <option value="DNI">D.N.I.</option>
+                            <option value="CE">Carné de Extranjería</option>
+                            <option value="PASAPORTE">Pasaporte</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="apoderadoDocNumero" class="required">Número</label>
+                        <input type="text" id="apoderadoDocNumero" name="apoderadoDocNumero" placeholder="Ej: 41475286" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="apoderadoDomicilio" class="required">Domiciliado(a) en</label>
+                    <input type="text" id="apoderadoDomicilio" name="apoderadoDomicilio" placeholder="Ej: PASAJE CAHUIDE 112, CARMEN DE LA LEGUA - REYNOSO" required>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="section-title">DATOS DEL POSTULANTE (MENOR DE EDAD)</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="postulanteNombre" class="required">Nombre y apellidos del postulante</label>
+                        <input type="text" id="postulanteNombre" name="postulanteNombre" placeholder="Ej: JOSE FERNANDO GUERRERO URDANETA" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="postulanteDocTipo" class="required">Identificado(a) con</label>
+                        <select id="postulanteDocTipo" name="postulanteDocTipo" required>
+                            <option value="">Seleccione tipo</option>
+                            <option value="DNI">D.N.I.</option>
+                            <option value="CE">Carné de Extranjería</option>
+                            <option value="PASAPORTE">Pasaporte</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="postulanteDocNumero" class="required">Número</label>
+                        <input type="text" id="postulanteDocNumero" name="postulanteDocNumero" placeholder="Ej: 90963100" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="admissionProcess" class="required">En condición de postulante del proceso de admisión</label>
+                    <input type="text" id="admissionProcess" name="admissionProcess" value="2024" required>
+                </div>
+            </div>
+            
+            <div class="declaration-section">
+                <h3 class="section-title">DECLARO BAJO JURAMENTO QUE:</h3>
+                
+                <div class="declaration-item">
+                    <div class="declaration-text">
+                        1. Mis datos personales y los de mi hijo(a) o apoderante consignados en la presente declaración jurada son los mismos que figuran en los documentos de identidad (DNI, pasaporte o carné de extranjería).
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="declaration1" name="declaration1" required>
+                        <label for="declaration1">Confirmo que los datos coinciden con los documentos de identidad</label>
+                    </div>
+                </div>
+                
+                <div class="declaration-item">
+                    <div class="declaration-text">
+                        2. Mi hijo(a) o apoderante en condición de postulante del proceso de admisión 2024 al Instituto de Educación Superior Tecnológico Público María Rosario Araoz Pinto, declaro que; a la fecha NO PADECE de enfermedad del COVID-19, ni presenta síntomas propios de ésta tales como fiebre, cansancio, tos seca, dificultad para respirar, dolor de garganta, diarrea, secreción nasal, dolores musculares y molestias propias de esta enfermedad y que no ha estado expuesto a personas con la enfermedad o con los síntomas en las últimas 48 horas.
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="declaration2" name="declaration2" required>
+                        <label for="declaration2">Confirmo que mi hijo(a) no padece COVID-19 ni síntomas relacionados</label>
+                    </div>
+                </div>
+                
+                <div class="declaration-item">
+                    <div class="declaration-text">
+                        3. Mi hijo(a) o apoderante no se encuentra dentro del grupo de riesgo para COVID-19, establecida en la Resolución Ministerial N° 972 - 2020 - MINSA de fecha 27 de noviembre de 2020.
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="declaration3" name="declaration3" required>
+                        <label for="declaration3">Confirmo que mi hijo(a) no pertenece a grupos de riesgo</label>
+                    </div>
+                </div>
+                
+                <div class="declaration-item">
+                    <div class="declaration-text">
+                        4. Mi hijo(a) o apoderante no posee ninguna condición de vulnerabilidad que ponga en riesgo su salud y la de los demás.
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="declaration4" name="declaration4" required>
+                        <label for="declaration4">Confirmo que mi hijo(a) no tiene condiciones de vulnerabilidad</label>
+                    </div>
+                </div>
+                
+                <div class="warning-box">
+                    <p><strong>ADVERTENCIA:</strong> En caso de resultar FALSA la información que proporcione, me someto a las responsabilidades administrativas, civiles y penales que haya a lugar conforme a las disposiciones normativas vigentes.</p>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="form-group">
+                    <label>Lima,</label>
+                    <div class="date-inputs">
+                        <input type="text" id="dia" name="dia" placeholder="Día (ej: 08)" style="width: 80px;" required>
+                        <label for="mes">de</label>
+                        <select id="mes" name="mes" required>
+                            <option value="">Mes</option>
+                            <option value="ENERO">ENERO</option>
+                            <option value="FEBRERO">FEBRERO</option>
+                            <option value="MARZO">MARZO</option>
+                            <option value="ABRIL">ABRIL</option>
+                            <option value="MAYO">MAYO</option>
+                            <option value="JUNIO">JUNIO</option>
+                            <option value="JULIO">JULIO</option>
+                            <option value="AGOSTO">AGOSTO</option>
+                            <option value="SETIEMBRE">SETIEMBRE</option>
+                            <option value="OCTUBRE">OCTUBRE</option>
+                            <option value="NOVIEMBRE">NOVIEMBRE</option>
+                            <option value="DICIEMBRE">DICIEMBRE</option>
+                        </select>
+                        <label for="anio">de</label>
+                        <input type="text" id="anio" name="anio" value="2024" style="width: 100px;" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="signature-section">
+                <label>Firma del apoderado:</label>
+                <div class="signature-box" id="signatureBox">
+                    <canvas id="signatureCanvas" width="600" height="100"></canvas>
+                    <span id="signaturePlaceholder">Firme aquí con el mouse o dedo</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="apoderadoNombreFirma" class="required">Apellidos y Nombres del apoderado:</label>
+                    <input type="text" id="apoderadoNombreFirma" name="apoderadoNombreFirma" placeholder="Ej: JOSE FERNANDO GUERRERO SANCHEZ" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="apoderadoDocFirma" class="required">D.N.I. o Carné de Extranjería del apoderado:</label>
+                    <input type="text" id="apoderadoDocFirma" name="apoderadoDocFirma" placeholder="Número de documento" required>
+                </div>
+            </div>
+            
+            <!-- Página 2 simulada -->
+            <div class="page-break">
+                <h3 class="section-title">IDENTIFICACIÓN DEL APODERADO</h3>
+                
+                <div class="form-group">
+                    <label for="apoderadoDocFinal" class="required">D.N.I. o Carné de Extranjería del apoderado:</label>
+                    <input type="text" id="apoderadoDocFinal" name="apoderadoDocFinal" placeholder="Número de documento" required>
+                </div>
+                
+                <div class="fingerprint-section">
+                    <p><strong>Huella digital del apoderado</strong></p>
+                    
+                    <div class="fingerprint-box" id="fingerprintBox">
+                        <img id="fingerprintImage" class="fingerprint-image" src="" alt="Huella digital" style="display: none;">
+                        <div class="fingerprint-placeholder" id="fingerprintPlaceholder">
+                            No hay huella cargada<br>
+                            <small>Importe una imagen de su huella</small>
+                        </div>
+                        <div class="fingerprint-label">Índice Derecho</div>
+                    </div>
+                    
+                    <div class="upload-controls">
+                        <button type="button" class="upload-btn" id="uploadFingerprintBtn">
+                            📁 Importar imagen de huella
+                        </button>
+                        <button type="button" class="remove-btn" id="removeFingerprintBtn" style="display: none;">
+                            ✗ Eliminar huella
+                        </button>
+                    </div>
+                    
+                    <input type="file" id="fingerprintFileInput" class="file-input" accept="image/*">
+                    
+                    <div class="upload-instructions">
+                        <p><strong>Instrucciones:</strong> Tome una foto de su huella digital (dedo índice derecho) o escanéela, luego impórtela usando el botón anterior. Formatos aceptados: JPG, PNG, GIF.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" class="btn-secondary" id="clearBtn">Limpiar formulario</button>
+                <button type="button" class="btn-danger" id="clearSignatureBtn">Limpiar firma</button>
+                <button type="button" class="btn-primary" id="previewBtn">Vista previa para imprimir</button>
+                <button type="submit" class="btn-primary" id="submitBtn">Enviar declaración</button>
+            </div>
+            
+            <div class="footnote">
+                <p><strong>Nota:</strong> Este formulario es una representación digital de la Declaración Jurada de Salud para menores de edad. Al enviarlo, usted certifica que toda la información proporcionada es verdadera y acepta las responsabilidades correspondientes en caso de falsedad.</p>
+                <p><strong>Importante:</strong> La huella digital debe ser una imagen clara de su dedo índice derecho. Puede tomar una foto con su celular o usar un escáner.</p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Manejo de la firma digital
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        const signaturePlaceholder = document.getElementById('signaturePlaceholder');
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        
+        // Elementos para la huella digital
+        const fingerprintBox = document.getElementById('fingerprintBox');
+        const fingerprintImage = document.getElementById('fingerprintImage');
+        const fingerprintPlaceholder = document.getElementById('fingerprintPlaceholder');
+        const uploadFingerprintBtn = document.getElementById('uploadFingerprintBtn');
+        const removeFingerprintBtn = document.getElementById('removeFingerprintBtn');
+        const fingerprintFileInput = document.getElementById('fingerprintFileInput');
+        
+        // Ajustar tamaño del canvas al contenedor
+        function resizeCanvas() {
+            const box = document.getElementById('signatureBox');
+            canvas.width = box.offsetWidth;
+            canvas.height = box.offsetHeight;
+            ctx.lineWidth = 2;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#2c3e50';
+        }
+        
+        // Inicializar el canvas
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Eventos para dibujar en el canvas
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('touchstart', startDrawingTouch);
+        
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchmove', drawTouch);
+        
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('touchend', stopDrawing);
+        
+        canvas.addEventListener('mouseout', stopDrawing);
+        
+        function startDrawing(e) {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+            signaturePlaceholder.style.display = 'none';
+        }
+        
+        function startDrawingTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            isDrawing = true;
+            [lastX, lastY] = [touch.clientX - rect.left, touch.clientY - rect.top];
+            signaturePlaceholder.style.display = 'none';
+        }
+        
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+        
+        function drawTouch(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            
+            [lastX, lastY] = [x, y];
+        }
+        
+        function stopDrawing() {
+            isDrawing = false;
+        }
+        
+        // Limpiar firma
+        document.getElementById('clearSignatureBtn').addEventListener('click', function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            signaturePlaceholder.style.display = 'block';
+        });
+        
+        // Manejo de la huella digital - Importar imagen
+        uploadFingerprintBtn.addEventListener('click', function() {
+            fingerprintFileInput.click();
+        });
+        
+        fingerprintFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Verificar que sea una imagen
+            if (!file.type.match('image.*')) {
+                alert('Por favor, seleccione un archivo de imagen (JPG, PNG, GIF).');
+                return;
+            }
+            
+            // Verificar tamaño máximo (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('La imagen es demasiado grande. Por favor, seleccione una imagen menor a 5MB.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                fingerprintImage.src = event.target.result;
+                fingerprintImage.style.display = 'block';
+                fingerprintPlaceholder.style.display = 'none';
+                removeFingerprintBtn.style.display = 'block';
+                
+                // Mostrar mensaje de éxito
+                alert('Huella digital cargada exitosamente. Asegúrese de que sea clara y corresponda a su dedo índice derecho.');
+            };
+            
+            reader.onerror = function() {
+                alert('Error al cargar la imagen. Por favor, intente nuevamente.');
+            };
+            
+            reader.readAsDataURL(file);
+        });
+        
+        // Eliminar huella digital
+        removeFingerprintBtn.addEventListener('click', function() {
+            fingerprintImage.src = '';
+            fingerprintImage.style.display = 'none';
+            fingerprintPlaceholder.style.display = 'block';
+            removeFingerprintBtn.style.display = 'none';
+            fingerprintFileInput.value = '';
+        });
+        
+        // Limpiar formulario completo
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            if (confirm('¿Está seguro de que desea limpiar todo el formulario?')) {
+                document.getElementById('healthDeclarationForm').reset();
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                signaturePlaceholder.style.display = 'block';
+                
+                // Limpiar huella digital
+                fingerprintImage.src = '';
+                fingerprintImage.style.display = 'none';
+                fingerprintPlaceholder.style.display = 'block';
+                removeFingerprintBtn.style.display = 'none';
+                fingerprintFileInput.value = '';
+                
+                // Restaurar valores por defecto
+                document.getElementById('admissionProcess').value = '2024';
+                document.getElementById('anio').value = '2024';
+                
+                // Limpiar selección de mes
+                document.getElementById('mes').selectedIndex = 0;
+            }
+        });
+        
+        // Vista previa para imprimir
+        document.getElementById('previewBtn').addEventListener('click', function() {
+            // Validar formulario antes de imprimir
+            if (!validateForm()) {
+                alert('Por favor, complete todos los campos requeridos antes de imprimir.');
+                return;
+            }
+            
+            // Verificar si hay huella cargada
+            if (fingerprintImage.style.display === 'none') {
+                if (!confirm('No ha cargado una imagen de huella digital. ¿Desea continuar de todos modos?')) {
+                    return;
+                }
+            }
+            
+            // Sincronizar los campos de documento del apoderado
+            const apoderadoDoc = document.getElementById('apoderadoDocNumero').value;
+            document.getElementById('apoderadoDocFirma').value = apoderadoDoc;
+            document.getElementById('apoderadoDocFinal').value = apoderadoDoc;
+            
+            // Sincronizar nombre del apoderado
+            const apoderadoNombre = document.getElementById('apoderadoNombre').value;
+            document.getElementById('apoderadoNombreFirma').value = apoderadoNombre;
+            
+            // Mostrar alerta antes de imprimir
+            alert('El formulario se abrirá en vista de impresión. Asegúrese de que toda la información sea correcta antes de imprimir.');
+            
+            // Imprimir
+            window.print();
+        });
+        
+        // Enviar formulario
+        document.getElementById('healthDeclarationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                alert('Por favor, complete todos los campos requeridos antes de enviar.');
+                return;
+            }
+            
+            // Verificar que haya firma
+            if (signaturePlaceholder.style.display !== 'none') {
+                if (!confirm('No ha proporcionado una firma. ¿Desea continuar de todos modos?')) {
+                    return;
+                }
+            }
+            
+            // Verificar si hay huella cargada
+            if (fingerprintImage.style.display === 'none') {
+                if (!confirm('No ha cargado una imagen de huella digital. ¿Desea continuar de todos modos?')) {
+                    return;
+                }
+            }
+            
+            // Sincronizar los campos de documento del apoderado
+            const apoderadoDoc = document.getElementById('apoderadoDocNumero').value;
+            document.getElementById('apoderadoDocFirma').value = apoderadoDoc;
+            document.getElementById('apoderadoDocFinal').value = apoderadoDoc;
+            
+            // Sincronizar nombre del apoderado
+            const apoderadoNombre = document.getElementById('apoderadoNombre').value;
+            document.getElementById('apoderadoNombreFirma').value = apoderadoNombre;
+            
+            // Preparar datos para envío (simulado)
+            const formData = {
+                apoderado: {
+                    nombre: apoderadoNombre,
+                    docTipo: document.getElementById('apoderadoDocTipo').value,
+                    docNumero: apoderadoDoc,
+                    domicilio: document.getElementById('apoderadoDomicilio').value
+                },
+                postulante: {
+                    nombre: document.getElementById('postulanteNombre').value,
+                    docTipo: document.getElementById('postulanteDocTipo').value,
+                    docNumero: document.getElementById('postulanteDocNumero').value
+                },
+                admissionProcess: document.getElementById('admissionProcess').value,
+                fecha: `${document.getElementById('dia').value} de ${document.getElementById('mes').value} de ${document.getElementById('anio').value}`,
+                signature: canvas.toDataURL(),
+                fingerprint: fingerprintImage.src || null,
+                declarations: {
+                    declaration1: document.getElementById('declaration1').checked,
+                    declaration2: document.getElementById('declaration2').checked,
+                    declaration3: document.getElementById('declaration3').checked,
+                    declaration4: document.getElementById('declaration4').checked
+                }
+            };
+            
+            console.log('Datos del formulario:', formData);
+            
+            alert(`¡Declaración jurada enviada con éxito!\n\nGracias ${apoderadoNombre} por completar la declaración de salud de su hijo(a). Los datos han sido registrados.`);
+            
+            // Podríamos agregar aquí la lógica para enviar el formulario a un servidor
+            // Por ejemplo: fetch('/submit-declaration', { method: 'POST', body: JSON.stringify(formData) })
+        });
+        
+        // Función de validación
+        function validateForm() {
+            const requiredFields = document.querySelectorAll('input[required], select[required], checkbox[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (field.type === 'checkbox') {
+                    if (!field.checked) {
+                        isValid = false;
+                        field.parentElement.style.color = 'red';
+                    } else {
+                        field.parentElement.style.color = '';
+                    }
+                } else {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.style.borderColor = 'red';
+                    } else {
+                        field.style.borderColor = '';
+                    }
+                }
+            });
+            
+            return isValid;
+        }
+        
+        // Auto-completar campos relacionados
+        document.getElementById('apoderadoNombre').addEventListener('blur', function() {
+            const apoderadoNombreValue = this.value;
+            const apoderadoNombreFirmaField = document.getElementById('apoderadoNombreFirma');
+            
+            if (apoderadoNombreFirmaField.value === '') {
+                apoderadoNombreFirmaField.value = apoderadoNombreValue;
+            }
+        });
+        
+        document.getElementById('apoderadoDocNumero').addEventListener('blur', function() {
+            const docNumero = this.value;
+            document.getElementById('apoderadoDocFirma').value = docNumero;
+            document.getElementById('apoderadoDocFinal').value = docNumero;
+        });
+        
+        // Permitir arrastrar y soltar imagen para la huella
+        fingerprintBox.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fingerprintBox.style.borderColor = '#3498db';
+            fingerprintBox.style.backgroundColor = '#f0f8ff';
+        });
+        
+        fingerprintBox.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fingerprintBox.style.borderColor = '#ddd';
+            fingerprintBox.style.backgroundColor = '#fdfdfd';
+        });
+        
+        fingerprintBox.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fingerprintBox.style.borderColor = '#ddd';
+            fingerprintBox.style.backgroundColor = '#fdfdfd';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fingerprintFileInput.files = files;
+                const event = new Event('change');
+                fingerprintFileInput.dispatchEvent(event);
+            }
+        });
+        
+        // Configurar mes actual como predeterminado
+        const meses = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", 
+                      "JULIO", "AGOSTO", "SETIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
+        const mesActual = new Date().getMonth();
+        document.getElementById('mes').value = meses[mesActual];
+        
+        // Configurar día actual como predeterminado
+        const diaActual = new Date().getDate();
+        document.getElementById('dia').value = diaActual.toString().padStart(2, '0');
+    </script>
+</body>
+</html>
