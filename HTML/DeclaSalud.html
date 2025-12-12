@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Declaración Jurada de Salud - COVID-19</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #04532c;
+            padding-bottom: 15px;
+        }
+        
+        .header h1 {
+            color: #0abe55;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+        
+        .header h2 {
+            color: rgb(12, 92, 23);
+            font-size: 18px;
+            margin-top: 0;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #02472d;
+        }
+        
+        input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .checkbox-group {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #0ca35d;
+            margin-bottom: 20px;
+        }
+        
+        .checkbox-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .checkbox-item input {
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+        
+        .declaration-text {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        
+        .signature-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .signature-box {
+            height: 100px;
+            border: 1px dashed #aaa;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            background-color: #fdfdfd;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #777;
+            font-style: italic;
+        }
+        
+        .signature-box canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #d5dbdb;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .footnote {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .page-break {
+            page-break-before: always;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #ccc;
+        }
+        
+        .fingerprint-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .fingerprint-box {
+            display: inline-block;
+            width: 200px;
+            height: 150px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+            background-color: #fdfdfd;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fingerprint-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: white;
+        }
+        
+        .fingerprint-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #aaa;
+            font-style: italic;
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+        }
+        
+        .fingerprint-label {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 3px 0;
+        }
+        
+        .upload-controls {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .upload-btn {
+            padding: 8px 15px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .upload-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .remove-btn {
+            padding: 8px 15px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .remove-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .upload-instructions {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 10px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            
+            .button-group, .upload-controls {
+                display: none;
+            }
+            
+            .checkbox-item input {
+                transform: scale(1.2);
+            }
+            
+            .fingerprint-box {
+                border: 1px solid #000;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .upload-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>DECLARACIÓN JURADA DE SALUD</h1>
+            <h2>(DE NO PADECER COVID-19)</h2>
+            <p>Instituto de Educación Superior Tecnológico Público<br>María Rosario Araoz Pinto</p>
+        </div>
+        
+        <form id="healthDeclarationForm">
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="fullName">Yo,</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Apellidos y Nombres completos" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="documentNumber">Identificado(a) con N.º</label>
+                    <input type="text" id="documentNumber" name="documentNumber" placeholder="DNI o Carné de Extranjería" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Domiciliado(a) en</label>
+                    <input type="text" id="address" name="address" placeholder="Dirección completa" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="admissionProcess">En condición de postulante del proceso de admisión</label>
+                    <input type="text" id="admissionProcess" name="admissionProcess" value="2024" required>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>DECLARO QUE:</h3>
+                
+                <div class="checkbox-group">
+                    <div class="declaration-text">
+                        1. A la fecha NO PADEZCO de enfermedad del COVID-19, ni presento síntomas propios de ésta tales como fiebre, cansancio, tos seca, dificultad para respirar, dolor de garganta, diarrea, secreción nasal, dolores musculares y molestias propias de esta enfermedad y que no he estado expuesto a personas con la enfermedad o con los síntomas en las últimas 48 horas.
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="declaration1" name="declaration1" required>
+                        <label for="declaration1">Confirmo que la declaración anterior es verdadera</label>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <div class="declaration-text">
+                        2. No me encuentro dentro del grupo de riesgo para COVID-19, establecida en la Resolución Ministerial N° 972 – 2020 –MINSA de fecha 27 de noviembre de 2020.
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="declaration2" name="declaration2" required>
+                        <label for="declaration2">Confirmo que no pertenezco a grupos de riesgo</label>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <div class="declaration-text">
+                        3. No poseo ninguna condición de vulnerabilidad que ponga en riesgo mi salud y la de los demás.
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="declaration3" name="declaration3" required>
+                        <label for="declaration3">Confirmo que no tengo condiciones de vulnerabilidad</label>
+                    </div>
+                </div>
+                
+                <div class="declaration-text">
+                    <p><strong>En caso de resultar FALSA la información que proporcione, me someto a las responsabilidades administrativas, civiles y penales que haya a lugar conforme a las disposiciones normativas vigentes.</strong></p>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="city">Lima,</label>
+                    <input type="text" id="city" name="city" value="Lima" readonly style="width: 100px; display: inline-block; margin-right: 10px;">
+                    <label for="day" style="display: inline-block; margin-right: 5px;">de</label>
+                    <input type="text" id="day" name="day" placeholder="día" style="width: 60px; display: inline-block; margin-right: 5px;" required>
+                    <label for="month" style="display: inline-block; margin-right: 5px;">de</label>
+                    <input type="text" id="month" name="month" placeholder="mes" style="width: 100px; display: inline-block; margin-right: 5px;" required>
+                    <label for="year" style="display: inline-block; margin-right: 5px;">de</label>
+                    <input type="text" id="year" name="year" value="2024" style="width: 80px; display: inline-block;" required>
+                </div>
+            </div>
+            
+            <div class="signature-section">
+                <label>Firma:</label>
+                <div class="signature-box" id="signatureBox">
+                    <canvas id="signatureCanvas" width="600" height="100"></canvas>
+                    <span id="signaturePlaceholder">Firme aquí con el mouse o dedo</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="printedName">Apellidos y Nombres (en letra de molde):</label>
+                    <input type="text" id="printedName" name="printedName" placeholder="Apellidos y Nombres completos" required>
+                </div>
+            </div>
+            
+            <!-- Página 2 simulada -->
+            <div class="page-break">
+                <h3>DATOS DE IDENTIFICACIÓN</h3>
+                
+                <div class="form-group">
+                    <label for="documentNumber2">D.N.I. o Carné de Extranjería:</label>
+                    <input type="text" id="documentNumber2" name="documentNumber2" placeholder="Número de documento" required>
+                </div>
+                
+                <div class="fingerprint-section">
+                    <p><strong>Huella digital</strong></p>
+                    
+                    <div class="fingerprint-box" id="fingerprintBox">
+                        <img id="fingerprintImage" class="fingerprint-image" src="" alt="Huella digital" style="display: none;">
+                        <div class="fingerprint-placeholder" id="fingerprintPlaceholder">
+                            No hay huella cargada<br>
+                            <small>Importe una imagen de su huella</small>
+                        </div>
+                        <div class="fingerprint-label">Índice Derecho</div>
+                    </div>
+                    
+                    <div class="upload-controls">
+                        <button type="button" class="upload-btn" id="uploadFingerprintBtn">
+                            📁 Importar imagen de huella
+                        </button>
+                        <button type="button" class="remove-btn" id="removeFingerprintBtn" style="display: none;">
+                            ✗ Eliminar huella
+                        </button>
+                    </div>
+                    
+                    <input type="file" id="fingerprintFileInput" class="file-input" accept="image/*">
+                    
+                    <div class="upload-instructions">
+                        <p><strong>Instrucciones:</strong> Tome una foto de su huella digital (dedo índice derecho) o escanéela, luego impórtela usando el botón anterior. Formatos aceptados: JPG, PNG, GIF.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" class="btn-secondary" id="clearBtn">Limpiar formulario</button>
+                <button type="button" class="btn-danger" id="clearSignatureBtn">Limpiar firma</button>
+                <button type="button" class="btn-primary" id="previewBtn">Vista previa para imprimir</button>
+                <button type="submit" class="btn-primary" id="submitBtn">Enviar declaración</button>
+            </div>
+            
+            <div class="footnote">
+                <p><strong>Nota:</strong> Este formulario es una representación digital de la Declaración Jurada de Salud. Al enviarlo, usted certifica que toda la información proporcionada es verdadera y acepta las responsabilidades correspondientes en caso de falsedad.</p>
+                <p><strong>Importante:</strong> La huella digital debe ser una imagen clara de su dedo índice derecho. Puede tomar una foto con su celular o usar un escáner.</p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Manejo de la firma digital
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        const signaturePlaceholder = document.getElementById('signaturePlaceholder');
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        
+        // Elementos para la huella digital
+        const fingerprintBox = document.getElementById('fingerprintBox');
+        const fingerprintImage = document.getElementById('fingerprintImage');
+        const fingerprintPlaceholder = document.getElementById('fingerprintPlaceholder');
+        const uploadFingerprintBtn = document.getElementById('uploadFingerprintBtn');
+        const removeFingerprintBtn = document.getElementById('removeFingerprintBtn');
+        const fingerprintFileInput = document.getElementById('fingerprintFileInput');
+        
+        // Ajustar tamaño del canvas al contenedor
+        function resizeCanvas() {
+            const box = document.getElementById('signatureBox');
+            canvas.width = box.offsetWidth;
+            canvas.height = box.offsetHeight;
+            ctx.lineWidth = 2;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#2c3e50';
+        }
+        
+        // Inicializar el canvas
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Eventos para dibujar en el canvas
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('touchstart', startDrawingTouch);
+        
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchmove', drawTouch);
+        
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('touchend', stopDrawing);
+        
+        canvas.addEventListener('mouseout', stopDrawing);
+        
+        function startDrawing(e) {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+            signaturePlaceholder.style.display = 'none';
+        }
+        
+        function startDrawingTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            isDrawing = true;
+            [lastX, lastY] = [touch.clientX - rect.left, touch.clientY - rect.top];
+            signaturePlaceholder.style.display = 'none';
+        }
+        
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+        
+        function drawTouch(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            
+            [lastX, lastY] = [x, y];
+        }
+        
+        function stopDrawing() {
+            isDrawing = false;
+        }
+        
+        // Limpiar firma
+        document.getElementById('clearSignatureBtn').addEventListener('click', function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            signaturePlaceholder.style.display = 'block';
+        });
+        
+        // Manejo de la huella digital - Importar imagen
+        uploadFingerprintBtn.addEventListener('click', function() {
+            fingerprintFileInput.click();
+        });
+        
+        fingerprintFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Verificar que sea una imagen
+            if (!file.type.match('image.*')) {
+                alert('Por favor, seleccione un archivo de imagen (JPG, PNG, GIF).');
+                return;
+            }
+            
+            // Verificar tamaño máximo (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('La imagen es demasiado grande. Por favor, seleccione una imagen menor a 5MB.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                fingerprintImage.src = event.target.result;
+                fingerprintImage.style.display = 'block';
+                fingerprintPlaceholder.style.display = 'none';
+                removeFingerprintBtn.style.display = 'block';
+                
+                // Mostrar mensaje de éxito
+                alert('Huella digital cargada exitosamente. Asegúrese de que sea clara y corresponda a su dedo índice derecho.');
+            };
+            
+            reader.onerror = function() {
+                alert('Error al cargar la imagen. Por favor, intente nuevamente.');
+            };
+            
+            reader.readAsDataURL(file);
+        });
+        
+        // Eliminar huella digital
+        removeFingerprintBtn.addEventListener('click', function() {
+            fingerprintImage.src = '';
+            fingerprintImage.style.display = 'none';
+            fingerprintPlaceholder.style.display = 'block';
+            removeFingerprintBtn.style.display = 'none';
+            fingerprintFileInput.value = '';
+        });
+        
+        // Limpiar formulario completo
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            if (confirm('¿Está seguro de que desea limpiar todo el formulario?')) {
+                document.getElementById('healthDeclarationForm').reset();
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                signaturePlaceholder.style.display = 'block';
+                
+                // Limpiar huella digital
+                fingerprintImage.src = '';
+                fingerprintImage.style.display = 'none';
+                fingerprintPlaceholder.style.display = 'block';
+                removeFingerprintBtn.style.display = 'none';
+                fingerprintFileInput.value = '';
+                
+                // Restaurar valores por defecto
+                document.getElementById('admissionProcess').value = '2024';
+                document.getElementById('city').value = 'Lima';
+                document.getElementById('year').value = '2024';
+            }
+        });
+        
+        // Vista previa para imprimir
+        document.getElementById('previewBtn').addEventListener('click', function() {
+            // Validar formulario antes de imprimir
+            if (!validateForm()) {
+                alert('Por favor, complete todos los campos requeridos antes de imprimir.');
+                return;
+            }
+            
+            // Verificar si hay huella cargada
+            if (fingerprintImage.style.display === 'none') {
+                if (!confirm('No ha cargado una imagen de huella digital. ¿Desea continuar de todos modos?')) {
+                    return;
+                }
+            }
+            
+            // Actualizar el segundo campo de documento con el valor del primero
+            const docNumber = document.getElementById('documentNumber').value;
+            document.getElementById('documentNumber2').value = docNumber;
+            
+            // Mostrar alerta antes de imprimir
+            alert('El formulario se abrirá en vista de impresión. Asegúrese de que toda la información sea correcta antes de imprimir.');
+            
+            // Imprimir
+            window.print();
+        });
+        
+        // Enviar formulario
+        document.getElementById('healthDeclarationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                alert('Por favor, complete todos los campos requeridos antes de enviar.');
+                return;
+            }
+            
+            // Verificar que haya firma
+            if (signaturePlaceholder.style.display !== 'none') {
+                if (!confirm('No ha proporcionado una firma. ¿Desea continuar de todos modos?')) {
+                    return;
+                }
+            }
+            
+            // Verificar si hay huella cargada
+            if (fingerprintImage.style.display === 'none') {
+                if (!confirm('No ha cargado una imagen de huella digital. ¿Desea continuar de todos modos?')) {
+                    return;
+                }
+            }
+            
+            // Actualizar el segundo campo de documento con el valor del primero
+            const docNumber = document.getElementById('documentNumber').value;
+            document.getElementById('documentNumber2').value = docNumber;
+            
+            // Aquí normalmente se enviarían los datos a un servidor
+            // Por ahora, solo mostramos un mensaje de éxito
+            const fullName = document.getElementById('fullName').value;
+            
+            // Preparar datos para envío (simulado)
+            const formData = {
+                fullName: fullName,
+                documentNumber: docNumber,
+                address: document.getElementById('address').value,
+                admissionProcess: document.getElementById('admissionProcess').value,
+                date: `${document.getElementById('day').value}/${document.getElementById('month').value}/${document.getElementById('year').value}`,
+                signature: canvas.toDataURL(),
+                fingerprint: fingerprintImage.src || null,
+                declarations: {
+                    declaration1: document.getElementById('declaration1').checked,
+                    declaration2: document.getElementById('declaration2').checked,
+                    declaration3: document.getElementById('declaration3').checked
+                }
+            };
+            
+            console.log('Datos del formulario:', formData);
+            
+            alert(`¡Declaración jurada enviada con éxito!\n\nGracias ${fullName} por completar su declaración de salud. Sus datos han sido registrados.`);
+            
+            // Podríamos agregar aquí la lógica para enviar el formulario a un servidor
+            // Por ejemplo: fetch('/submit-declaration', { method: 'POST', body: JSON.stringify(formData) })
+        });
+        
+        // Función de validación
+        function validateForm() {
+            const requiredFields = document.querySelectorAll('input[required], checkbox[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (field.type === 'checkbox') {
+                    if (!field.checked) {
+                        isValid = false;
+                        field.parentElement.style.color = 'red';
+                    } else {
+                        field.parentElement.style.color = '';
+                    }
+                } else {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.style.borderColor = 'red';
+                    } else {
+                        field.style.borderColor = '';
+                    }
+                }
+            });
+            
+            return isValid;
+        }
+        
+        // Auto-completar el nombre en el campo de firma
+        document.getElementById('fullName').addEventListener('blur', function() {
+            const fullNameValue = this.value;
+            const printedNameField = document.getElementById('printedName');
+            
+            if (printedNameField.value === '') {
+                printedNameField.value = fullNameValue;
+            }
+        });
+        
+        // Sincronizar los campos de número de documento
+        document.getElementById('documentNumber').addEventListener('blur', function() {
+            const docNumber = this.value;
+            document.getElementById('documentNumber2').value = docNumber;
+        });
+        
+        // Permitir arrastrar y soltar imagen para la huella
+        fingerprintBox.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fingerprintBox.style.borderColor = '#3498db';
+            fingerprintBox.style.backgroundColor = '#f0f8ff';
+        });
+        
+        fingerprintBox.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fingerprintBox.style.borderColor = '#ddd';
+            fingerprintBox.style.backgroundColor = '#fdfdfd';
+        });
+        
+        fingerprintBox.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fingerprintBox.style.borderColor = '#ddd';
+            fingerprintBox.style.backgroundColor = '#fdfdfd';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fingerprintFileInput.files = files;
+                const event = new Event('change');
+                fingerprintFileInput.dispatchEvent(event);
+            }
+        });
+    </script>
+</body>
+</html>
