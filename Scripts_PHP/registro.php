@@ -35,7 +35,6 @@
             background-color: #15803d;
         }
 
-        /* Ocultar por defecto la sección de apoderado */
         #seccion-apoderado,
         #alerta-menor {
             display: none;
@@ -45,7 +44,6 @@
 
 <body class="min-h-screen flex flex-col">
 
-    <!-- HEADER (Consistente con el Inicio) -->
     <header class="header-top py-4 shadow-md">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -59,19 +57,16 @@
                     <p class="text-xs text-gray-500">Formulario de Inscripción 2025</p>
                 </div>
             </div>
-            <a href="index.html" class="text-gray-500 hover:text-green-600 text-sm font-medium"><i
+            <a href="../index.html" class="text-gray-500 hover:text-green-600 text-sm font-medium"><i
                     class="fas fa-arrow-left"></i> Volver al Inicio</a>
         </div>
     </header>
 
-    <!-- FORMULARIO PRINCIPAL -->
     <main class="container mx-auto px-4 py-8 max-w-4xl flex-grow">
-
         <div class="bg-white rounded-xl shadow-lg p-8">
             <h2 class="text-2xl font-bold text-center text-gray-800 mb-2">Ficha de Inscripción al Postulante</h2>
             <p class="text-center text-gray-500 mb-8 text-sm">Completa todos los campos obligatorios (*)</p>
 
-            <!-- El action apunta a un archivo PHP que procesará los datos (lo haremos luego) -->
             <form action="procesar_registro.php" method="POST" enctype="multipart/form-data" class="space-y-8">
 
                 <!-- 1. DATOS DEL POSTULANTE -->
@@ -82,11 +77,10 @@
                             <label class="block text-sm font-medium text-gray-700 mb-1">DNI *</label>
                             <input type="text" name="dni" maxlength="8"
                                 class="w-full border-gray-300 rounded-md shadow-sm border p-2 focus:ring-green-500 focus:border-green-500"
-                                placeholder="Ej: 72873141" required>
+                                required>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Nacimiento *</label>
-                            <!-- El evento onchange dispara la validación de edad -->
                             <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" onchange="validarEdad()"
                                 class="w-full border-gray-300 rounded-md shadow-sm border p-2 focus:ring-green-500 focus:border-green-500"
                                 required>
@@ -97,11 +91,23 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm border p-2 focus:ring-green-500 focus:border-green-500"
                                 required>
                         </div>
+                        <!-- CORRECCIÓN: Nombres únicos para apellidos -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Apellidos *</label>
-                            <input type="text" name="apellidos"
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Apellido Paterno *</label>
+                            <input type="text" name="apellido_paterno"
                                 class="w-full border-gray-300 rounded-md shadow-sm border p-2 focus:ring-green-500 focus:border-green-500"
                                 required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Apellido Materno *</label>
+                            <input type="text" name="apellido_materno"
+                                class="w-full border-gray-300 rounded-md shadow-sm border p-2 focus:ring-green-500 focus:border-green-500"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Edad *</label>
+                            <input type="number" name="edad" id="input_edad" readonly
+                                class="w-full border-gray-300 rounded-md shadow-sm border p-2 bg-gray-100" required>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico *</label>
@@ -111,32 +117,32 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Celular *</label>
-                            <input type="tel" name="celular"
+                            <input type="tel" name="celular" maxlength="9"
+                                class="w-full border-gray-300 rounded-md shadow-sm border p-2 focus:ring-green-500 focus:border-green-500"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Dirección Domicilio *</label>
+                            <input type="text" name="direccion_domicilio"
                                 class="w-full border-gray-300 rounded-md shadow-sm border p-2 focus:ring-green-500 focus:border-green-500"
                                 required>
                         </div>
                     </div>
                 </div>
 
-                <!-- ALERTA MENOR DE EDAD (Se muestra solo si es < 18) -->
+                <!-- ALERTA MENOR DE EDAD -->
                 <div id="alerta-menor" class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded">
                     <div class="flex">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-exclamation-triangle text-orange-500"></i>
-                        </div>
+                        <div class="flex-shrink-0"><i class="fas fa-exclamation-triangle text-orange-500"></i></div>
                         <div class="ml-3">
-                            <p class="text-sm text-orange-700 font-bold">
-                                Postulante Menor de Edad Detectado
-                            </p>
-                            <p class="text-sm text-orange-600">
-                                Al ser menor de 18 años, es obligatorio registrar los datos del apoderado y utilizar los
-                                formatos de Declaración Jurada firmados por él/ella.
-                            </p>
+                            <p class="text-sm text-orange-700 font-bold">Postulante Menor de Edad Detectado</p>
+                            <p class="text-sm text-orange-600">Al ser menor de 18 años, es obligatorio registrar los
+                                datos del apoderado.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- 2. DATOS DEL APODERADO (Condicional) -->
+                <!-- 2. DATOS DEL APODERADO -->
                 <div id="seccion-apoderado">
                     <h3 class="section-title text-lg mb-4">2. Datos del Apoderado (Padre/Madre)</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
@@ -146,9 +152,20 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm border p-2">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo Apoderado
-                                *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nombres Apoderado *</label>
                             <input type="text" name="nombre_apoderado" id="input_nombre_apoderado"
+                                class="w-full border-gray-300 rounded-md shadow-sm border p-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Apellido Paterno Apoderado
+                                *</label>
+                            <input type="text" name="apellido_paterno_apoderado" id="input_apellido_paterno_apoderado"
+                                class="w-full border-gray-300 rounded-md shadow-sm border p-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Apellido Materno Apoderado
+                                *</label>
+                            <input type="text" name="apellido_materno_apoderado" id="input_apellido_materno_apoderado"
                                 class="w-full border-gray-300 rounded-md shadow-sm border p-2">
                         </div>
                     </div>
@@ -163,11 +180,15 @@
                             <select name="carrera" class="w-full border-gray-300 rounded-md shadow-sm border p-2"
                                 required>
                                 <option value="">-- Seleccione --</option>
-                                <option value="contabilidad">Contabilidad</option>
-                                <option value="computacion">Computación e Informática</option>
-                                <option value="diseño">Diseño Gráfico</option>
-                                <option value="mecanica">Mecánica Automotriz</option>
-                                <!-- Agrega las que falten -->
+                                <option value="Contabilidad">Contabilidad</option>
+                                <option value="Desarrollo de Sistemas">Desarrollo de Sistemas e Información</option>
+                                <option value="Diseño Gráfico">Diseño Gráfico</option>
+                                <option value="Mecánica Automotriz">Mecánica Automotriz</option>
+                                <option value="Administración">Administración de Empresas</option>
+                                <option value="Construcción Civil">Construcción Civil</option>
+                                <option value="Diseño Publicitario">Diseño Publicitario</option>
+                                <option value="Mecánica de Producción">Mecánica de Producción</option>
+                                <option value="Secretariado">Secretariado Ejecutivo</option>
                             </select>
                         </div>
                         <div>
@@ -181,62 +202,43 @@
                     </div>
                 </div>
 
-                <!-- 4. DOCUMENTACIÓN (Lógica de descarga y subida) -->
+                <!-- 4. DOCUMENTACIÓN -->
                 <div>
                     <h3 class="section-title text-lg mb-4">4. Carga de Documentos</h3>
 
-                    <!-- PASO A: DESCARGAR -->
                     <div class="bg-blue-50 p-4 rounded-lg mb-6 border border-blue-100">
                         <h4 class="font-bold text-blue-800 mb-2"><i class="fas fa-download mr-2"></i>Paso 1: Descarga
                             los formatos</h4>
-                        <p class="text-sm text-blue-600 mb-3">Descarga, imprime y firma los documentos según tu
-                            condición. Luego escanéalos o tómales foto.</p>
-
                         <div class="flex flex-wrap gap-3">
-                            <!-- Comunes -->
                             <a href="docs/solicitud_director.pdf" target="_blank"
                                 class="px-3 py-2 bg-white text-blue-600 text-sm font-medium rounded border border-blue-200 hover:bg-blue-100">
-                                <i class="fas fa-file-pdf mr-1"></i> Solicitud al Director (General)
+                                <i class="fas fa-file-pdf mr-1"></i> Solicitud al Director
                             </a>
-                            <a href="docs/acta_compromiso.pdf" target="_blank"
-                                class="px-3 py-2 bg-white text-blue-600 text-sm font-medium rounded border border-blue-200 hover:bg-blue-100">
-                                <i class="fas fa-file-pdf mr-1"></i> Acta de Compromiso (General)
-                            </a>
-
-                            <!-- Condicionales (Se alternan con JS) -->
+                            <!-- Enlaces dinámicos -->
                             <a id="link-salud" href="docs/dj_salud_mayor.pdf" target="_blank"
                                 class="px-3 py-2 bg-white text-green-600 text-sm font-medium rounded border border-green-200 hover:bg-green-50">
-                                <i class="fas fa-file-medical mr-1"></i> DJ Salud (MAYOR de edad)
+                                <i class="fas fa-file-medical mr-1"></i> DJ Salud (MAYOR)
                             </a>
                             <a id="link-dinero" href="docs/dj_dinero_mayor.pdf" target="_blank"
                                 class="px-3 py-2 bg-white text-green-600 text-sm font-medium rounded border border-green-200 hover:bg-green-50">
-                                <i class="fas fa-file-invoice-dollar mr-1"></i> DJ Dinero (MAYOR de edad)
+                                <i class="fas fa-file-invoice-dollar mr-1"></i> DJ Dinero (MAYOR)
                             </a>
                         </div>
                     </div>
 
-                    <!-- PASO B: SUBIR -->
                     <div class="grid grid-cols-1 gap-6">
-                        <!-- Archivos Comunes -->
                         <div class="border-b pb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Foto del DNI (Ambas caras)
                                 *</label>
                             <input type="file" name="archivo_dni" accept=".pdf, .jpg, .png"
-                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
-                                required>
+                                class="block w-full text-sm text-gray-500" required>
                         </div>
                         <div class="border-b pb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Voucher de Pago *</label>
                             <input type="file" name="archivo_voucher" accept=".pdf, .jpg, .png"
-                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
-                                required>
+                                class="block w-full text-sm text-gray-500" required>
                         </div>
-
-                        <!-- Archivos de Formatos Firmados -->
                         <div class="bg-gray-50 p-4 rounded border border-gray-200">
-                            <h4 class="text-sm font-bold text-gray-700 mb-3">Sube aquí los formatos que descargaste y
-                                firmaste:</h4>
-
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">DJ de Salud (Firmada)
                                     *</label>
@@ -251,14 +253,12 @@
                     </div>
                 </div>
 
-                <!-- BOTÓN DE ENVÍO -->
                 <div class="text-center pt-6">
                     <button type="submit"
                         class="btn-submit text-white font-bold py-3 px-10 rounded-lg text-lg w-full md:w-auto shadow-lg">
                         <i class="fas fa-paper-plane mr-2"></i> ENVIAR INSCRIPCIÓN
                     </button>
                 </div>
-
             </form>
         </div>
     </main>
@@ -267,10 +267,10 @@
         <p>&copy; 2025 IESTP María Rosario Araoz Pinto.</p>
     </footer>
 
-    <!-- SCRIPT DE VALIDACIÓN DE EDAD -->
     <script>
         function validarEdad() {
             const fechaInput = document.getElementById('fecha_nacimiento').value;
+            const inputEdad = document.getElementById('input_edad'); // Referencia al input de edad
             if (!fechaInput) return;
 
             const fechaNac = new Date(fechaInput);
@@ -278,54 +278,46 @@
             let edad = hoy.getFullYear() - fechaNac.getFullYear();
             const mes = hoy.getMonth() - fechaNac.getMonth();
 
-            // Ajuste fino de edad (si no ha cumplido años este mes)
             if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
                 edad--;
             }
 
-            const esMenor = edad < 18;
+            // Asignar la edad calculada al input visible
+            inputEdad.value = edad;
 
-            // Elementos del DOM
+            const esMenor = edad < 18;
             const alertaMenor = document.getElementById('alerta-menor');
             const seccionApoderado = document.getElementById('seccion-apoderado');
             const inputsApoderado = seccionApoderado.querySelectorAll('input');
-
-            // Links de descarga
             const linkSalud = document.getElementById('link-salud');
             const linkDinero = document.getElementById('link-dinero');
 
             if (esMenor) {
-                // MOSTRAR cosas de menor
                 alertaMenor.style.display = 'block';
                 seccionApoderado.style.display = 'block';
-
-                // Hacer requeridos los inputs del apoderado
                 inputsApoderado.forEach(input => input.required = true);
 
-                // Cambiar links a versión Menor (Asegúrate de tener estos archivos)
                 linkSalud.href = "docs/dj_salud_menor.pdf";
-                linkSalud.innerHTML = '<i class="fas fa-file-medical mr-1"></i> DJ Salud (MENOR - Apoderado)';
+                linkSalud.innerHTML = '<i class="fas fa-file-medical mr-1"></i> DJ Salud (MENOR)';
                 linkSalud.className = "px-3 py-2 bg-white text-orange-600 text-sm font-medium rounded border border-orange-200 hover:bg-orange-50";
 
                 linkDinero.href = "docs/dj_dinero_menor.pdf";
-                linkDinero.innerHTML = '<i class="fas fa-file-invoice-dollar mr-1"></i> DJ Dinero (MENOR - Apoderado)';
+                linkDinero.innerHTML = '<i class="fas fa-file-invoice-dollar mr-1"></i> DJ Dinero (MENOR)';
                 linkDinero.className = "px-3 py-2 bg-white text-orange-600 text-sm font-medium rounded border border-orange-200 hover:bg-orange-50";
-
             } else {
-                // OCULTAR cosas de menor
                 alertaMenor.style.display = 'none';
                 seccionApoderado.style.display = 'none';
-
-                // Quitar requerido a apoderado
                 inputsApoderado.forEach(input => input.required = false);
 
-                // Restaurar links a versión Mayor
+                // Limpiar campos de apoderado si cambia de opinión
+                inputsApoderado.forEach(input => input.value = '');
+
                 linkSalud.href = "docs/dj_salud_mayor.pdf";
-                linkSalud.innerHTML = '<i class="fas fa-file-medical mr-1"></i> DJ Salud (MAYOR de edad)';
+                linkSalud.innerHTML = '<i class="fas fa-file-medical mr-1"></i> DJ Salud (MAYOR)';
                 linkSalud.className = "px-3 py-2 bg-white text-green-600 text-sm font-medium rounded border border-green-200 hover:bg-green-50";
 
                 linkDinero.href = "docs/dj_dinero_mayor.pdf";
-                linkDinero.innerHTML = '<i class="fas fa-file-invoice-dollar mr-1"></i> DJ Dinero (MAYOR de edad)';
+                linkDinero.innerHTML = '<i class="fas fa-file-invoice-dollar mr-1"></i> DJ Dinero (MAYOR)';
                 linkDinero.className = "px-3 py-2 bg-white text-green-600 text-sm font-medium rounded border border-green-200 hover:bg-green-50";
             }
         }
