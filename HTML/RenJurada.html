@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Declaración Jurada - Menor de Edad</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+        
+        .header .subtitle {
+            font-size: 16px;
+            font-weight: normal;
+            margin-bottom: 5px;
+        }
+        
+        .institution-name {
+            text-align: center;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+        
+        .form-section {
+            padding: 20px 30px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 250px;
+            margin-right: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group:last-child {
+            margin-right: 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .declaration-text {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+            font-size: 15px;
+        }
+        
+        .checkbox-group {
+            margin: 15px 0;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .checkbox-group label {
+            display: inline-block;
+            font-weight: normal;
+        }
+        
+        .signature-section {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        
+        .signature-box {
+            border: 1px dashed #aaa;
+            height: 100px;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: white;
+        }
+        
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #ddd;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-reset {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+        
+        .btn-reset:hover {
+            background-color: #dee2e6;
+        }
+        
+        .btn-submit {
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        .btn-submit:hover {
+            background-color: #1a252f;
+        }
+        
+        .required {
+            color: #e74c3c;
+        }
+        
+        .page-number {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        @media print {
+            .buttons, .btn {
+                display: none;
+            }
+            
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-group {
+                min-width: 100%;
+                margin-right: 0;
+            }
+            
+            .form-section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>P.B.U Ministerio de Educación</h1>
+            <div class="subtitle">Dirección Regional</div>
+            <h2>DECLARACIÓN JURADA DE DOCUMENTOS</h2>
+            <div>(POSTULANTE MENOR DE EDAD)</div>
+        </div>
+        
+        <div class="institution-name">
+            Instituto de Educación Superior Tecnológico Público<br>
+            María Rosario Araoz Pinto
+        </div>
+        
+        <form id="declaracionForm">
+            <!-- Página 1 -->
+            <div class="form-section">
+                <div class="page-number">Página 1 de 3</div>
+                <h3 class="form-title">DATOS DEL APODERADO Y POSTULANTE</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombresApoderado">Nombres del apoderado <span class="required">*</span></label>
+                        <input type="text" id="nombresApoderado" name="nombresApoderado" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="apellidosApoderado">Apellidos del apoderado <span class="required">*</span></label>
+                        <input type="text" id="apellidosApoderado" name="apellidosApoderado" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dniApoderado">DNI del apoderado <span class="required">*</span></label>
+                        <input type="text" id="dniApoderado" name="dniApoderado" required pattern="[0-9]{8}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="domicilioApoderado">Domicilio <span class="required">*</span></label>
+                        <input type="text" id="domicilioApoderado" name="domicilioApoderado" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="parentesco">Parentesco con el postulante <span class="required">*</span></label>
+                        <select id="parentesco" name="parentesco" required>
+                            <option value="">Seleccione...</option>
+                            <option value="padre">Padre</option>
+                            <option value="madre">Madre</option>
+                            <option value="apoderado">Apoderado</option>
+                            <option value="tutor">Tutor</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-title" style="margin-top: 30px;">DATOS DEL POSTULANTE (MENOR DE EDAD)</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombresPostulante">Nombres del postulante <span class="required">*</span></label>
+                        <input type="text" id="nombresPostulante" name="nombresPostulante" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="apellidosPostulante">Apellidos del postulante <span class="required">*</span></label>
+                        <input type="text" id="apellidosPostulante" name="apellidosPostulante" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dniPostulante">DNI del postulante <span class="required">*</span></label>
+                        <input type="text" id="dniPostulante" name="dniPostulante" required pattern="[0-9]{8}">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Página 2 -->
+            <div class="form-section">
+                <div class="page-number">Página 2 de 3</div>
+                <h3 class="form-title">DECLARACIÓN BAJO JURAMENTO</h3>
+                
+                <div class="declaration-text">
+                    <p><strong>DECLARO BAJO JURAMENTO QUE:</strong></p>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="declaracion1" name="declaracion1" required>
+                        <label for="declaracion1">I. Mis datos personales y los de mi hijo(a) o apoderante consignados en la presente declaración jurada y en la inscripción vía web de la IESTP María Rosario Araoz Pinto son los mismos que figuran en los documentos de identidad (DNI, pasaporte o carné de extranjería).</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="declaracion2" name="declaracion2" required>
+                        <label for="declaracion2">II. Los documentos proporcionados virtualmente en la inscripción son fidedignos a los originales y no tienen ninguna modificación o alteración.</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="declaracion3" name="declaracion3" required>
+                        <label for="declaracion3">III. Mi hijo(a) o apoderante ha culminado satisfactoriamente sus estudios de nivel secundaria en la Institución Educativa:</label>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="institucionEducativa">Institución Educativa <span class="required">*</span></label>
+                        <input type="text" id="institucionEducativa" name="institucionEducativa" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ciudad">Ciudad <span class="required">*</span></label>
+                        <input type="text" id="ciudad" name="ciudad" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="region">Región <span class="required">*</span></label>
+                        <input type="text" id="region" name="region" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="provincia">Provincia <span class="required">*</span></label>
+                        <input type="text" id="provincia" name="provincia" required>
+                    </div>
+                </div>
+                
+                <div class="declaration-text">
+                    <p>...y que por motivos de la emergencia sanitaria a nivel nacional, no es posible tramitar el certificado de estudios y en caso de ocupar una vacante en el proceso de Admisión no presencial me comprometo a regularizar la entrega de dichos certificados en original de forma virtual (o física si en caso termina la emergencia sanitaria). Caso contrario, me someto a las disposiciones que la autoridad del IESTP María Rosario Araoz Pinto y el equipo técnico de admisión estime pertinente.</p>
+                </div>
+            </div>
+            
+            <!-- Página 3 -->
+            <div class="form-section">
+                <div class="page-number">Página 3 de 3</div>
+                
+                <div class="warning">
+                    <strong>ADVERTENCIA:</strong> Comprobarse la falsedad de la información registrada al momento de mi inscripción. De faltar a la verdad en esta declaración me sujeto a los alcances de lo establecido en el artículo 411° del Código Penal y acepto la anulación del examen de admisión del TESTP María Rosario Araoz Pinto, sin lugar a reclamo.
+                </div>
+                
+                <div class="signature-section">
+                    <h3 class="form-title">FIRMA DEL APODERADO</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fecha">Fecha <span class="required">*</span></label>
+                            <input type="date" id="fecha" name="fecha" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dniFirma">DNI del apoderado (para verificación) <span class="required">*</span></label>
+                            <input type="text" id="dniFirma" name="dniFirma" required pattern="[0-9]{8}">
+                        </div>
+                    </div>
+                    
+                    <label>Firma del apoderado <span class="required">*</span></label>
+                    <div class="signature-box" id="signatureBox">
+                        <p>Firma aquí o en el espacio destinado para tal efecto</p>
+                    </div>
+                    
+                    <div style="margin-top: 10px;">
+                        <button type="button" id="clearSignature" class="btn btn-reset" style="padding: 8px 16px; font-size: 14px;">Limpiar firma</button>
+                    </div>
+                    
+                    <div class="form-row" style="margin-top: 20px;">
+                        <div class="form-group">
+                            <label for="huellaDigital">Huella digital (índice derecho)</label>
+                            <input type="text" id="huellaDigital" name="huellaDigital" placeholder="Se registrará físicamente">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="warning" style="margin-top: 20px;">
+                    <strong>Artículo 411° del Código Penal:</strong> El que, en un procedimiento administrativo, hace una falsa declaración en relación a hechos o circunstancias que le corresponde probar, violando la presunción de veracidad establecida por ley, será reprimido con pena privativa de libertad no menor de uno ni mayor de cuatro años.
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button type="reset" class="btn btn-reset">Limpiar formulario</button>
+                <button type="submit" class="btn btn-submit">Enviar declaración jurada</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('declaracionForm');
+            const signatureBox = document.getElementById('signatureBox');
+            const clearSignatureBtn = document.getElementById('clearSignature');
+            
+            // Configurar fecha actual por defecto
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha').value = today;
+            
+            // Simulación simple de firma (en una implementación real usarías una librería de firma)
+            let isDrawing = false;
+            
+            signatureBox.addEventListener('mousedown', function(e) {
+                isDrawing = true;
+                drawSignature(e);
+            });
+            
+            signatureBox.addEventListener('mousemove', function(e) {
+                if (isDrawing) {
+                    drawSignature(e);
+                }
+            });
+            
+            signatureBox.addEventListener('mouseup', function() {
+                isDrawing = false;
+            });
+            
+            signatureBox.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                isDrawing = true;
+                drawSignature(e.touches[0]);
+            });
+            
+            signatureBox.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                if (isDrawing) {
+                    drawSignature(e.touches[0]);
+                }
+            });
+            
+            signatureBox.addEventListener('touchend', function() {
+                isDrawing = false;
+            });
+            
+            function drawSignature(event) {
+                const rect = signatureBox.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                
+                const dot = document.createElement('div');
+                dot.style.position = 'absolute';
+                dot.style.left = x + 'px';
+                dot.style.top = y + 'px';
+                dot.style.width = '3px';
+                dot.style.height = '3px';
+                dot.style.backgroundColor = 'black';
+                dot.style.borderRadius = '50%';
+                
+                signatureBox.appendChild(dot);
+                signatureBox.style.position = 'relative';
+            }
+            
+            clearSignatureBtn.addEventListener('click', function() {
+                const dots = signatureBox.querySelectorAll('div');
+                dots.forEach(dot => dot.remove());
+            });
+            
+            // Validación del formulario
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validar que todas las declaraciones estén marcadas
+                const declaracion1 = document.getElementById('declaracion1');
+                const declaracion2 = document.getElementById('declaracion2');
+                const declaracion3 = document.getElementById('declaracion3');
+                
+                if (!declaracion1.checked || !declaracion2.checked || !declaracion3.checked) {
+                    alert('Debe aceptar todas las declaraciones bajo juramento.');
+                    return;
+                }
+                
+                // Validar que haya firma (al menos un punto dibujado)
+                const signatureDots = signatureBox.querySelectorAll('div');
+                if (signatureDots.length === 0) {
+                    alert('Debe proporcionar su firma en el espacio correspondiente.');
+                    return;
+                }
+                
+                // Si todo está correcto, mostrar confirmación
+                const apoderadoNombre = document.getElementById('nombresApoderado').value + ' ' + document.getElementById('apellidosApoderado').value;
+                const postulanteNombre = document.getElementById('nombresPostulante').value + ' ' + document.getElementById('apellidosPostulante').value;
+                
+                if (confirm(`¿Confirma que desea enviar la declaración jurada a nombre de ${apoderadoNombre} como apoderado de ${postulanteNombre}?`)) {
+                    alert('Declaración jurada enviada correctamente. Se ha registrado su solicitud.');
+                    // En un caso real, aquí enviarías los datos al servidor
+                    // form.submit();
+                }
+            });
+            
+            // Copiar DNI del apoderado a verificación si están vacíos
+            const dniApoderadoInput = document.getElementById('dniApoderado');
+            const dniFirmaInput = document.getElementById('dniFirma');
+            
+            dniApoderadoInput.addEventListener('blur', function() {
+                if (!dniFirmaInput.value) {
+                    dniFirmaInput.value = dniApoderadoInput.value;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
