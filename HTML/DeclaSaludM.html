@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Declaración Jurada de Salud - Menor de Edad</title>
+    <!-- Agregar jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -173,6 +176,7 @@
             justify-content: space-between;
             margin-top: 30px;
             gap: 10px;
+            flex-wrap: wrap;
         }
         
         button {
@@ -184,6 +188,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             flex: 1;
+            min-width: 200px;
         }
         
         .btn-primary {
@@ -211,6 +216,15 @@
         
         .btn-danger:hover {
             background-color: #c0392b;
+        }
+        
+        .btn-success {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
         }
         
         .footnote {
@@ -388,6 +402,10 @@
             .date-inputs {
                 flex-direction: column;
                 align-items: flex-start;
+            }
+            
+            button {
+                min-width: 100%;
             }
         }
     </style>
@@ -615,6 +633,7 @@
                 <button type="button" class="btn-secondary" id="clearBtn">Limpiar formulario</button>
                 <button type="button" class="btn-danger" id="clearSignatureBtn">Limpiar firma</button>
                 <button type="button" class="btn-primary" id="previewBtn">Vista previa para imprimir</button>
+                <button type="button" class="btn-success" id="downloadPdfBtn">Descargar PDF</button>
                 <button type="submit" class="btn-primary" id="submitBtn">Enviar declaración</button>
             </div>
             
@@ -626,6 +645,9 @@
     </div>
 
     <script>
+        // Cargar jsPDF
+        const { jsPDF } = window.jspdf;
+        
         // Manejo de la firma digital
         const canvas = document.getElementById('signatureCanvas');
         const ctx = canvas.getContext('2d');
@@ -811,13 +833,7 @@
             }
             
             // Sincronizar los campos de documento del apoderado
-            const apoderadoDoc = document.getElementById('apoderadoDocNumero').value;
-            document.getElementById('apoderadoDocFirma').value = apoderadoDoc;
-            document.getElementById('apoderadoDocFinal').value = apoderadoDoc;
-            
-            // Sincronizar nombre del apoderado
-            const apoderadoNombre = document.getElementById('apoderadoNombre').value;
-            document.getElementById('apoderadoNombreFirma').value = apoderadoNombre;
+            syncApoderadoFields();
             
             // Mostrar alerta antes de imprimir
             alert('El formulario se abrirá en vista de impresión. Asegúrese de que toda la información sea correcta antes de imprimir.');
@@ -825,6 +841,289 @@
             // Imprimir
             window.print();
         });
+        
+        // Descargar PDF
+        document.getElementById('downloadPdfBtn').addEventListener('click', function() {
+            if (!validateForm()) {
+                alert('Por favor, complete todos los campos requeridos antes de generar el PDF.');
+                return;
+            }
+            
+            // Sincronizar los campos de documento del apoderado
+            syncApoderadoFields();
+            
+            // Generar PDF
+            generatePDF();
+        });
+        
+        // Sincronizar campos del apoderado
+        function syncApoderadoFields() {
+            const apoderadoDoc = document.getElementById('apoderadoDocNumero').value;
+            const apoderadoNombre = document.getElementById('apoderadoNombre').value;
+            
+            document.getElementById('apoderadoDocFirma').value = apoderadoDoc;
+            document.getElementById('apoderadoDocFinal').value = apoderadoDoc;
+            document.getElementById('apoderadoNombreFirma').value = apoderadoNombre;
+        }
+        
+        // Función para generar PDF
+        function generatePDF() {
+            // Crear un nuevo documento PDF
+            const doc = new jsPDF('p', 'mm', 'a4');
+            
+            // Configuración de márgenes
+            const marginLeft = 15;
+            const marginRight = 15;
+            const pageWidth = 210;
+            const pageHeight = 297;
+            let yPosition = 20;
+            
+            // Obtener datos del formulario
+            const apoderadoNombre = document.getElementById('apoderadoNombre').value;
+            const apoderadoDocTipo = document.getElementById('apoderadoDocTipo').value;
+            const apoderadoDocNumero = document.getElementById('apoderadoDocNumero').value;
+            const apoderadoDomicilio = document.getElementById('apoderadoDomicilio').value;
+            const postulanteNombre = document.getElementById('postulanteNombre').value;
+            const postulanteDocTipo = document.getElementById('postulanteDocTipo').value;
+            const postulanteDocNumero = document.getElementById('postulanteDocNumero').value;
+            const admissionProcess = document.getElementById('admissionProcess').value;
+            const dia = document.getElementById('dia').value;
+            const mes = document.getElementById('mes').value;
+            const anio = document.getElementById('anio').value;
+            
+            // Configurar fuente y colores
+            doc.setFont("helvetica", "normal");
+            
+            // Encabezado
+            doc.setFontSize(10);
+            doc.text("IESTP María Rosario Araoz Pinto", marginLeft, yPosition);
+            doc.text("Ministerio de Educación", pageWidth - marginRight - 45, yPosition, { align: "right" });
+            
+            yPosition += 10;
+            
+            // Nombre de la institución
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(10, 163, 74);
+            doc.text("INSTITUTO DE EDUCACIÓN SUPERIOR TECNOLÓGICO PÚBLICO", pageWidth / 2, yPosition, { align: "center" });
+            yPosition += 6;
+            doc.text("MARÍA ROSARIO ARAOZ PINTO", pageWidth / 2, yPosition, { align: "center" });
+            
+            yPosition += 10;
+            
+            // Título principal
+            doc.setFontSize(16);
+            doc.setTextColor(44, 62, 80);
+            doc.text("DECLARACIÓN JURADA DE SALUD", pageWidth / 2, yPosition, { align: "center" });
+            
+            yPosition += 8;
+            
+            // Subtítulo
+            doc.setFontSize(14);
+            doc.setTextColor(9, 114, 56);
+            doc.text("(DE NO PADECER COVID-19)", pageWidth / 2, yPosition, { align: "center" });
+            
+            yPosition += 15;
+            
+            // Nota
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.setFont("helvetica", "bold");
+            doc.text("NOTA:", marginLeft, yPosition);
+            doc.setFont("helvetica", "normal");
+            doc.text("Este formulario debe ser completado por el padre, madre o apoderado del postulante menor de edad.", marginLeft + 15, yPosition);
+            
+            yPosition += 15;
+            
+            // Datos del apoderado
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(44, 62, 80);
+            doc.text("DATOS DEL PADRE, MADRE O APODERADO", marginLeft, yPosition);
+            
+            yPosition += 10;
+            
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Yo, ${apoderadoNombre}`, marginLeft, yPosition);
+            
+            yPosition += 7;
+            doc.text(`Identificado(a) con ${apoderadoDocTipo} N° ${apoderadoDocNumero}`, marginLeft, yPosition);
+            
+            yPosition += 7;
+            doc.text(`Domiciliado(a) en ${apoderadoDomicilio}`, marginLeft, yPosition);
+            
+            yPosition += 15;
+            
+            // Datos del postulante
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.text("DATOS DEL POSTULANTE (MENOR DE EDAD)", marginLeft, yPosition);
+            
+            yPosition += 10;
+            
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Nombre y apellidos del postulante: ${postulanteNombre}`, marginLeft, yPosition);
+            
+            yPosition += 7;
+            doc.text(`Identificado(a) con ${postulanteDocTipo} N° ${postulanteDocNumero}`, marginLeft, yPosition);
+            
+            yPosition += 7;
+            doc.text(`En condición de postulante del proceso de admisión: ${admissionProcess}`, marginLeft, yPosition);
+            
+            yPosition += 15;
+            
+            // Declaraciones
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.text("DECLARO BAJO JURAMENTO QUE:", marginLeft, yPosition);
+            
+            yPosition += 10;
+            
+            // Declaración 1
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "normal");
+            const declaration1 = "1. Mis datos personales y los de mi hijo(a) o apoderante consignados en la presente declaración jurada son los mismos que figuran en los documentos de identidad (DNI, pasaporte o carné de extranjería).";
+            const lines1 = doc.splitTextToSize(declaration1, pageWidth - marginLeft - marginRight);
+            doc.text(lines1, marginLeft, yPosition);
+            
+            yPosition += lines1.length * 6 + 5;
+            doc.text("✓ Confirmo que los datos coinciden con los documentos de identidad", marginLeft + 10, yPosition);
+            
+            yPosition += 15;
+            
+            // Declaración 2
+            const declaration2 = "2. Mi hijo(a) o apoderante en condición de postulante del proceso de admisión 2024 al Instituto de Educación Superior Tecnológico Público María Rosario Araoz Pinto, declaro que; a la fecha NO PADECE de enfermedad del COVID-19, ni presenta síntomas propios de ésta tales como fiebre, cansancio, tos seca, dificultad para respirar, dolor de garganta, diarrea, secreción nasal, dolores musculares y molestias propias de esta enfermedad y que no ha estado expuesto a personas con la enfermedad o con los síntomas en las últimas 48 horas.";
+            const lines2 = doc.splitTextToSize(declaration2, pageWidth - marginLeft - marginRight);
+            doc.text(lines2, marginLeft, yPosition);
+            
+            yPosition += lines2.length * 6 + 5;
+            doc.text("✓ Confirmo que mi hijo(a) no padece COVID-19 ni síntomas relacionados", marginLeft + 10, yPosition);
+            
+            yPosition += 15;
+            
+            // Verificar si necesitamos nueva página
+            if (yPosition > pageHeight - 50) {
+                doc.addPage();
+                yPosition = 20;
+            }
+            
+            // Declaración 3
+            const declaration3 = "3. Mi hijo(a) o apoderante no se encuentra dentro del grupo de riesgo para COVID-19, establecida en la Resolución Ministerial N° 972 - 2020 - MINSA de fecha 27 de noviembre de 2020.";
+            const lines3 = doc.splitTextToSize(declaration3, pageWidth - marginLeft - marginRight);
+            doc.text(lines3, marginLeft, yPosition);
+            
+            yPosition += lines3.length * 6 + 5;
+            doc.text("✓ Confirmo que mi hijo(a) no pertenece a grupos de riesgo", marginLeft + 10, yPosition);
+            
+            yPosition += 15;
+            
+            // Declaración 4
+            const declaration4 = "4. Mi hijo(a) o apoderante no posee ninguna condición de vulnerabilidad que ponga en riesgo su salud y la de los demás.";
+            const lines4 = doc.splitTextToSize(declaration4, pageWidth - marginLeft - marginRight);
+            doc.text(lines4, marginLeft, yPosition);
+            
+            yPosition += lines4.length * 6 + 5;
+            doc.text("✓ Confirmo que mi hijo(a) no tiene condiciones de vulnerabilidad", marginLeft + 10, yPosition);
+            
+            yPosition += 15;
+            
+            // Advertencia
+            doc.setFont("helvetica", "bold");
+            doc.text("ADVERTENCIA:", marginLeft, yPosition);
+            doc.setFont("helvetica", "normal");
+            const warning = "En caso de resultar FALSA la información que proporcione, me someto a las responsabilidades administrativas, civiles y penales que haya a lugar conforme a las disposiciones normativas vigentes.";
+            const warningLines = doc.splitTextToSize(warning, pageWidth - marginLeft - marginRight);
+            doc.text(warningLines, marginLeft + 15, yPosition + 5);
+            
+            yPosition += warningLines.length * 6 + 15;
+            
+            // Fecha
+            doc.text(`Lima, ${dia} de ${mes} de ${anio}`, marginLeft, yPosition);
+            
+            yPosition += 20;
+            
+            // Firma
+            doc.text("Firma del apoderado:", marginLeft, yPosition);
+            
+            yPosition += 10;
+            
+            // Dibujar espacio para firma
+            doc.setDrawColor(0);
+            doc.setLineWidth(0.5);
+            doc.rect(marginLeft, yPosition, 80, 25);
+            
+            // Agregar la firma del canvas si existe
+            const signatureDataUrl = canvas.toDataURL();
+            if (signatureDataUrl && signaturePlaceholder.style.display === 'none') {
+                doc.addImage(signatureDataUrl, 'PNG', marginLeft + 2, yPosition + 2, 76, 21);
+            }
+            
+            yPosition += 35;
+            
+            // Datos de firma
+            doc.text(`Apellidos y Nombres del apoderado: ${apoderadoNombre}`, marginLeft, yPosition);
+            
+            yPosition += 7;
+            doc.text(`D.N.I. o Carné de Extranjería del apoderado: ${apoderadoDocNumero}`, marginLeft, yPosition);
+            
+            // Nueva página para la huella digital
+            doc.addPage();
+            yPosition = 20;
+            
+            // Título segunda página
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.text("IDENTIFICACIÓN DEL APODERADO", marginLeft, yPosition);
+            
+            yPosition += 15;
+            
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "normal");
+            doc.text(`D.N.I. o Carné de Extranjería del apoderado: ${apoderadoDocNumero}`, marginLeft, yPosition);
+            
+            yPosition += 20;
+            
+            // Huella digital
+            doc.setFont("helvetica", "bold");
+            doc.text("Huella digital del apoderado", marginLeft, yPosition);
+            
+            yPosition += 10;
+            
+            // Dibujar espacio para huella
+            doc.setDrawColor(0);
+            doc.setLineWidth(0.5);
+            doc.rect(marginLeft, yPosition, 50, 40);
+            
+            // Agregar imagen de huella si existe
+            if (fingerprintImage.src && fingerprintImage.style.display !== 'none') {
+                try {
+                    doc.addImage(fingerprintImage.src, 'PNG', marginLeft + 2, yPosition + 2, 46, 36);
+                } catch (error) {
+                    console.error("Error al agregar imagen de huella:", error);
+                }
+            }
+            
+            yPosition += 45;
+            
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text("Índice Derecho", marginLeft, yPosition);
+            
+            // Pie de página
+            const footerY = pageHeight - 20;
+            doc.setFontSize(9);
+            doc.setTextColor(100, 100, 100);
+            doc.text("Documento generado el " + new Date().toLocaleDateString('es-ES'), pageWidth / 2, footerY, { align: "center" });
+            doc.text("Declaración Jurada de Salud - Menor de Edad", pageWidth / 2, footerY + 5, { align: "center" });
+            
+            // Guardar PDF
+            const fileName = `Declaracion_Salud_${postulanteNombre.replace(/\s+/g, '_')}_${anio}.pdf`;
+            doc.save(fileName);
+            
+            alert(`PDF generado exitosamente: ${fileName}`);
+        }
         
         // Enviar formulario
         document.getElementById('healthDeclarationForm').addEventListener('submit', function(e) {
@@ -850,20 +1149,14 @@
             }
             
             // Sincronizar los campos de documento del apoderado
-            const apoderadoDoc = document.getElementById('apoderadoDocNumero').value;
-            document.getElementById('apoderadoDocFirma').value = apoderadoDoc;
-            document.getElementById('apoderadoDocFinal').value = apoderadoDoc;
-            
-            // Sincronizar nombre del apoderado
-            const apoderadoNombre = document.getElementById('apoderadoNombre').value;
-            document.getElementById('apoderadoNombreFirma').value = apoderadoNombre;
+            syncApoderadoFields();
             
             // Preparar datos para envío (simulado)
             const formData = {
                 apoderado: {
-                    nombre: apoderadoNombre,
+                    nombre: document.getElementById('apoderadoNombre').value,
                     docTipo: document.getElementById('apoderadoDocTipo').value,
-                    docNumero: apoderadoDoc,
+                    docNumero: document.getElementById('apoderadoDocNumero').value,
                     domicilio: document.getElementById('apoderadoDomicilio').value
                 },
                 postulante: {
@@ -885,32 +1178,30 @@
             
             console.log('Datos del formulario:', formData);
             
-            alert(`¡Declaración jurada enviada con éxito!\n\nGracias ${apoderadoNombre} por completar la declaración de salud de su hijo(a). Los datos han sido registrados.`);
-            
-            // Podríamos agregar aquí la lógica para enviar el formulario a un servidor
-            // Por ejemplo: fetch('/submit-declaration', { method: 'POST', body: JSON.stringify(formData) })
+            alert(`¡Declaración jurada enviada con éxito!\n\nGracias ${formData.apoderado.nombre} por completar la declaración de salud de su hijo(a). Los datos han sido registrados.`);
         });
         
         // Función de validación
         function validateForm() {
-            const requiredFields = document.querySelectorAll('input[required], select[required], checkbox[required]');
+            const requiredFields = document.querySelectorAll('input[required], select[required]');
+            const requiredCheckboxes = document.querySelectorAll('input[type="checkbox"][required]');
             let isValid = true;
             
             requiredFields.forEach(field => {
-                if (field.type === 'checkbox') {
-                    if (!field.checked) {
-                        isValid = false;
-                        field.parentElement.style.color = 'red';
-                    } else {
-                        field.parentElement.style.color = '';
-                    }
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = 'red';
                 } else {
-                    if (!field.value.trim()) {
-                        isValid = false;
-                        field.style.borderColor = 'red';
-                    } else {
-                        field.style.borderColor = '';
-                    }
+                    field.style.borderColor = '';
+                }
+            });
+            
+            requiredCheckboxes.forEach(checkbox => {
+                if (!checkbox.checked) {
+                    isValid = false;
+                    checkbox.parentElement.style.color = 'red';
+                } else {
+                    checkbox.parentElement.style.color = '';
                 }
             });
             
