@@ -1,0 +1,31 @@
+            <inicio (Menu) datos simples >
+    
+    segun la edad:
+
+<si es menor de edad >
+
+- Acta de compromiso (checkbox)
+
+- No devolución de dinero Menor de edad (checkbox)
+
+- Declaración jurada de certificación Menor de edad (checkbox)
+
+- Declaracion_jurada_de_Salud_Menor_de__edad (checkbox)
+
+<si es mayor de edad >
+
+- Acta_de_compromiso
+
+- No devolución de dinero Mayor de edad (checkbox)
+
+- Declaracion_Jurada_de_salud_Mayor_de_edad (checkbox)
+
+
+
+<Final - todas las edades>
+
+-Mostrar Datos Simples 
+
+-Mostrar Documentos rellenados
+
+- Mostrar mensaje de "Inscripccion exitosa"
