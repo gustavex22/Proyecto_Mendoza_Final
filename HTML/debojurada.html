@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Declaración Jurada - IESTP María Rosario Araoz Pinto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #000;
+            padding: 20px;
+            font-size: 14px;
+        }
+        
+        .app-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .controls-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .controls-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 8px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 10px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        
+        .fingerprint-section {
+            grid-column: span 2;
+            border: 2px dashed #3498db;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        
+        .fingerprint-section:hover {
+            background-color: #f8fafc;
+        }
+        
+        .fingerprint-preview {
+            max-width: 150px;
+            max-height: 100px;
+            margin: 10px auto;
+            border: 1px solid #ccc;
+            display: none;
+        }
+        
+        .buttons-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .alert {
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* PDF Preview Styles - EXACTO como el PDF original */
+        .pdf-preview-container {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            padding: 20px;
+        }
+        
+        .pdf-page {
+            width: 794px;
+            height: 1123px;
+            margin: 0 auto 20px;
+            padding: 70px;
+            background: white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .pdf-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        .pdf-subtitle {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        .pdf-minor-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .pdf-institution {
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 30px;
+        }
+        
+        .pdf-form-line {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .pdf-label {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        
+        .pdf-field {
+            border-bottom: 1px solid #000;
+            min-height: 25px;
+            padding: 3px 0;
+            font-size: 14px;
+            position: relative;
+        }
+        
+        .pdf-field.filled {
+            font-weight: bold;
+        }
+        
+        .pdf-note {
+            font-size: 11px;
+            color: #333;
+            margin-top: 2px;
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+        }
+        
+        .pdf-declaration-text {
+            font-size: 14px;
+            line-height: 1.4;
+            margin: 25px 0;
+            text-align: justify;
+        }
+        
+        .pdf-date {
+            font-size: 14px;
+            margin: 30px 0 40px 0;
+        }
+        
+        .pdf-signature-line {
+            width: 250px;
+            border-top: 1px solid #000;
+            margin: 5px 0;
+        }
+        
+        .pdf-footer-label {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .pdf-footer-field {
+            border-bottom: 1px solid #000;
+            min-height: 25px;
+            margin-top: 5px;
+        }
+        
+        .pdf-footer-field.filled {
+            font-weight: bold;
+        }
+        
+        /* Page 2 */
+        .pdf-page-2 {
+            margin-top: 20px;
+        }
+        
+        .pdf-dni-field {
+            margin-bottom: 30px;
+        }
+        
+        .pdf-fingerprint-area {
+            text-align: center;
+            margin: 50px 0;
+        }
+        
+        .pdf-fingerprint-label {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .pdf-fingerprint-box {
+            display: inline-block;
+            width: 180px;
+            height: 120px;
+            border: 1px solid #000;
+            position: relative;
+            margin-top: 10px;
+            line-height: 120px;
+            text-align: center;
+        }
+        
+        .pdf-fingerprint-img {
+            max-width: 170px;
+            max-height: 110px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .pdf-legal-reference {
+            font-size: 12px;
+            line-height: 1.3;
+            margin-top: 100px;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Responsive */
+        @media print {
+            .controls-panel {
+                display: none;
+            }
+        }
+    </style>
+    <!-- jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <div class="controls-panel">
+            <h2 class="controls-title">Completar Declaración Jurada</h2>
+            
+            <div id="alertMessage" class="alert"></div>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nombre">Apellidos y Nombres:</label>
+                    <input type="text" id="nombre" placeholder="Ingrese apellidos y nombres completos">
+                </div>
+                
+                <div class="form-group">
+                    <label for="dni">DNI o Carné de Extranjería:</label>
+                    <input type="text" id="dni" placeholder="Ingrese número de documento">
+                </div>
+                
+                <div class="form-group">
+                    <label for="domicilio">Domicilio:</label>
+                    <input type="text" id="domicilio" placeholder="Ingrese domicilio completo">
+                </div>
+                
+                <div class="form-group">
+                    <label for="fecha">Fecha:</label>
+                    <input type="date" id="fecha">
+                </div>
+                
+                <div class="fingerprint-section" id="fingerprintArea">
+                    <div>📷 Subir Huella Digital (Índice Derecho)</div>
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                        Arrastre una imagen aquí o haga clic para seleccionar
+                    </div>
+                    <input type="file" id="fingerprintFile" accept="image/*" style="display: none;">
+                    <img id="fingerprintPreview" class="fingerprint-preview" alt="Vista previa huella">
+                </div>
+            </div>
+            
+            <div class="buttons-container">
+                <button class="btn-primary" onclick="actualizarVistaPrevia()">Actualizar Vista</button>
+                <button class="btn-success" onclick="generarPDF()">Generar PDF</button>
+                <button onclick="imprimirDocumento()">Imprimir</button>
+                <button onclick="limpiarFormulario()">Limpiar</button>
+            </div>
+        </div>
+        
+        <div class="pdf-preview-container">
+            <h3 style="text-align: center; margin-bottom: 15px;">Vista Previa del Documento</h3>
+            
+            <!-- Página 1 -->
+            <div class="pdf-page">
+                <div class="pdf-title">DECLARACIÓN JURADA</div>
+                <div class="pdf-subtitle">DE DOCUMENTOS</div>
+                <div class="pdf-minor-title">(POSTULANTE MAYOR DE EDAD)</div>
+                
+                <div class="pdf-institution">
+                    El Instituto de Educación Superior Tecnológico Público María Rosario<br>
+                    Araoz Pinto establece la siguiente declaración jurada en el marco de la<br>
+                    LEY N.° 30512 DE INSTITUTOS Y ESCUELAS DE EDUCACIÓN<br>
+                    SUPERIOR Y DE LA CARRERA PÚBLICA DE SUS DOCENTES y el<br>
+                    artículo 411° del Código Penal.
+                </div>
+                
+                <div class="pdf-form-line">
+                    <div class="pdf-label">Yo,</div>
+                    <div class="pdf-field" id="previewNombre">_________________________</div>
+                    <div class="pdf-note">identificado (a)</div>
+                </div>
+                
+                <div class="pdf-form-line">
+                    <div class="pdf-label">domiciliado (a) en</div>
+                    <div class="pdf-field" id="previewDomicilio">_________________________</div>
+                </div>
+                
+                <div class="pdf-form-line">
+                    <div class="pdf-label">con N.°</div>
+                    <div class="pdf-field" id="previewDni">_________________________</div>
+                    <div class="pdf-note">DECLARO BAJO JURAMENTO QUE:</div>
+                </div>
+                
+                <div class="pdf-declaration-text">
+                    <strong>I. Al estar cociente del pago realizado por el derecho de examen de admisión y</strong><br>
+                    prospecto, tener conocimiento de la no devolución del deposito realizado,<br>
+                    acepto no realizar el pedido de la devolución del mismo, por cualquier<br>
+                    motivo.
+                </div>
+                
+                <div class="pdf-declaration-text">
+                    Autorizo al IESTP María Rosario Araoz Pinto la verificación de la presente<br>
+                    DECLARACIÓN JURADA, asumiendo la responsabilidad civil y/o penal de<br>
+                    comprobarse la falsedad de la información registrada al momento de mi<br>
+                    inscripción. De faltar a la verdad en esta declaración me sujeto a los alcances<br>
+                    de lo establecido en el artículo 411° del Código Penal<sup>1</sup> y acepto la anulación del<br>
+                    examen de admisión del IESTP María Rosario Araoz Pinto, sin lugar a reclamo.
+                </div>
+                
+                <div class="pdf-date" id="previewFecha">
+                    Lima, ____ de _______________ de ____
+                </div>
+                
+                <div class="pdf-signature-line"></div>
+                <div class="pdf-label">Firma</div>
+                
+                <div style="margin-top: 30px;">
+                    <div class="pdf-footer-label">Apellidos y Nombres:</div>
+                    <div class="pdf-footer-field" id="previewFirmaNombre">_________________________</div>
+                </div>
+            </div>
+            
+            <!-- Página 2 -->
+            <div class="pdf-page pdf-page-2">
+                <div class="pdf-form-line pdf-dni-field">
+                    <div class="pdf-label">D.N.I. o Carné de Extranjería:</div>
+                    <div class="pdf-field" id="previewDni2">_________________________</div>
+                </div>
+                
+                <div class="pdf-fingerprint-area">
+                    <div class="pdf-fingerprint-label">Huella digital</div>
+                    <div class="pdf-fingerprint-box">
+                        <span id="fingerprintText">Índice Derecho</span>
+                        <img id="previewFingerprintImg" class="pdf-fingerprint-img" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="pdf-legal-reference">
+                    <sup>1</sup> Artículo 411°.- El que, en un procedimiento administrativo, hace una falsa declaración en relación a hechos o circunstancias que le corresponde probar, violando la presunción de veracidad establecida por ley, será reprimido con pena privativa de libertad no menor de uno ni mayor de cuatro años.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let fingerprintImage = null;
+        const meses = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar fecha actual por defecto
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha').value = today;
+            
+            // Configurar eventos para huella digital
+            const fingerprintFile = document.getElementById('fingerprintFile');
+            const fingerprintArea = document.getElementById('fingerprintArea');
+            
+            fingerprintArea.addEventListener('click', function() {
+                fingerprintFile.click();
+            });
+            
+            fingerprintFile.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    handleFingerprintImage(e.target.files[0]);
+                }
+            });
+            
+            // Drag and drop para huella digital
+            fingerprintArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                fingerprintArea.style.backgroundColor = '#e8f4fd';
+            });
+            
+            fingerprintArea.addEventListener('dragleave', function() {
+                fingerprintArea.style.backgroundColor = '';
+            });
+            
+            fingerprintArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                fingerprintArea.style.backgroundColor = '';
+                
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    handleFingerprintImage(e.dataTransfer.files[0]);
+                }
+            });
+            
+            // Actualizar vista previa inicial
+            actualizarVistaPrevia();
+        });
+        
+        // Manejar imagen de huella digital
+        function handleFingerprintImage(file) {
+            if (!file.type.match('image.*')) {
+                mostrarAlerta('Por favor, seleccione una imagen válida (JPG, PNG)', 'error');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) { // 5MB máximo
+                mostrarAlerta('La imagen es muy grande. Máximo 5MB.', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                fingerprintImage = e.target.result;
+                
+                // Mostrar vista previa
+                const preview = document.getElementById('fingerprintPreview');
+                preview.src = fingerprintImage;
+                preview.style.display = 'block';
+                
+                // Actualizar vista previa del documento
+                actualizarVistaPrevia();
+                
+                mostrarAlerta('Huella digital cargada correctamente', 'success');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        // Mostrar alerta
+        function mostrarAlerta(mensaje, tipo = 'success') {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.textContent = mensaje;
+            alertDiv.className = `alert alert-${tipo}`;
+            alertDiv.style.display = 'block';
+            
+            setTimeout(function() {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Actualizar vista previa del documento
+        function actualizarVistaPrevia() {
+            // Obtener valores
+            const nombre = document.getElementById('nombre').value.trim();
+            const dni = document.getElementById('dni').value.trim();
+            const domicilio = document.getElementById('domicilio').value.trim();
+            const fecha = document.getElementById('fecha').value;
+            
+            // Actualizar campos en vista previa
+            const previewNombre = document.getElementById('previewNombre');
+            const previewDni = document.getElementById('previewDni');
+            const previewDni2 = document.getElementById('previewDni2');
+            const previewDomicilio = document.getElementById('previewDomicilio');
+            const previewFirmaNombre = document.getElementById('previewFirmaNombre');
+            const previewFecha = document.getElementById('previewFecha');
+            
+            // Actualizar nombre
+            if (nombre) {
+                previewNombre.textContent = nombre;
+                previewNombre.className = 'pdf-field filled';
+                previewFirmaNombre.textContent = nombre;
+                previewFirmaNombre.className = 'pdf-footer-field filled';
+            } else {
+                previewNombre.textContent = '_________________________';
+                previewNombre.className = 'pdf-field';
+                previewFirmaNombre.textContent = '_________________________';
+                previewFirmaNombre.className = 'pdf-footer-field';
+            }
+            
+            // Actualizar DNI
+            if (dni) {
+                previewDni.textContent = dni;
+                previewDni.className = 'pdf-field filled';
+                previewDni2.textContent = dni;
+                previewDni2.className = 'pdf-field filled';
+            } else {
+                previewDni.textContent = '_________________________';
+                previewDni.className = 'pdf-field';
+                previewDni2.textContent = '_________________________';
+                previewDni2.className = 'pdf-field';
+            }
+            
+            // Actualizar domicilio
+            if (domicilio) {
+                previewDomicilio.textContent = domicilio;
+                previewDomicilio.className = 'pdf-field filled';
+            } else {
+                previewDomicilio.textContent = '_________________________';
+                previewDomicilio.className = 'pdf-field';
+            }
+            
+            // Actualizar fecha
+            let fechaTexto = 'Lima, ____ de _______________ de ____';
+            if (fecha) {
+                const fechaObj = new Date(fecha);
+                const dia = fechaObj.getDate();
+                const mes = meses[fechaObj.getMonth()];
+                const anio = fechaObj.getFullYear();
+                fechaTexto = `Lima, ${dia} de ${mes} de ${anio}`;
+            }
+            previewFecha.textContent = fechaTexto;
+            
+            // Actualizar huella digital
+            const fingerprintImg = document.getElementById('previewFingerprintImg');
+            const fingerprintText = document.getElementById('fingerprintText');
+            
+            if (fingerprintImage) {
+                fingerprintImg.src = fingerprintImage;
+                fingerprintImg.style.display = 'block';
+                fingerprintText.style.display = 'none';
+            } else {
+                fingerprintImg.style.display = 'none';
+                fingerprintText.style.display = 'block';
+            }
+            
+            mostrarAlerta('Vista previa actualizada', 'success');
+        }
+        
+        // Generar PDF
+        async function generarPDF() {
+            // Validar datos mínimos
+            const nombre = document.getElementById('nombre').value.trim();
+            const dni = document.getElementById('dni').value.trim();
+            
+            if (!nombre || !dni) {
+                mostrarAlerta('Por favor, complete al menos el nombre y DNI', 'error');
+                return;
+            }
+            
+            mostrarAlerta('Generando PDF... Esto puede tomar unos segundos.', 'success');
+            
+            try {
+                // Capturar ambas páginas
+                const pages = document.querySelectorAll('.pdf-page');
+                
+                // Crear PDF
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'px',
+                    format: [794, 1123] // Tamaño exacto de A4 en pixeles
+                });
+                
+                // Configuración
+                pdf.setFont('helvetica');
+                pdf.setFontSize(11);
+                
+                // Generar cada página
+                for (let i = 0; i < pages.length; i++) {
+                    if (i > 0) {
+                        pdf.addPage();
+                    }
+                    
+                    const canvas = await html2canvas(pages[i], {
+                        scale: 2,
+                        useCORS: true,
+                        backgroundColor: '#ffffff',
+                        logging: false
+                    });
+                    
+                    const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                    
+                    // Calcular dimensiones para ajustar a la página
+                    const pageWidth = pdf.internal.pageSize.getWidth();
+                    const pageHeight = pdf.internal.pageSize.getHeight();
+                    
+                    // Añadir imagen al PDF
+                    pdf.addImage(imgData, 'JPEG', 0, 0, pageWidth, pageHeight);
+                }
+                
+                // Guardar PDF
+                const nombreArchivo = `Declaracion_Jurada_${dni}_${nombre.replace(/\s+/g, '_')}.pdf`;
+                pdf.save(nombreArchivo);
+                
+                mostrarAlerta('PDF generado y descargado correctamente', 'success');
+                
+            } catch (error) {
+                console.error('Error al generar PDF:', error);
+                mostrarAlerta('Error al generar el PDF. Intente nuevamente.', 'error');
+            }
+        }
+        
+        // Imprimir documento
+        function imprimirDocumento() {
+            // Validar datos mínimos
+            const nombre = document.getElementById('nombre').value.trim();
+            const dni = document.getElementById('dni').value.trim();
+            
+            if (!nombre || !dni) {
+                mostrarAlerta('Complete nombre y DNI antes de imprimir', 'error');
+                return;
+            }
+            
+            window.print();
+        }
+        
+        // Limpiar formulario
+        function limpiarFormulario() {
+            if (confirm('¿Está seguro de limpiar todos los datos?')) {
+                document.getElementById('nombre').value = '';
+                document.getElementById('dni').value = '';
+                document.getElementById('domicilio').value = '';
+                document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+                
+                // Limpiar huella digital
+                fingerprintImage = null;
+                document.getElementById('fingerprintFile').value = '';
+                document.getElementById('fingerprintPreview').style.display = 'none';
+                document.getElementById('fingerprintPreview').src = '';
+                
+                actualizarVistaPrevia();
+                mostrarAlerta('Formulario limpiado', 'success');
+            }
+        }
+    </script>
+</body>
+</html>
