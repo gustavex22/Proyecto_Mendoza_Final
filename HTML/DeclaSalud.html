@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Declaración Jurada de Salud - COVID-19</title>
+    <!-- Agregar jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -131,6 +133,7 @@
             justify-content: space-between;
             margin-top: 30px;
             gap: 10px;
+            flex-wrap: wrap;
         }
         
         button {
@@ -142,6 +145,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             flex: 1;
+            min-width: 180px;
         }
         
         .btn-primary {
@@ -169,6 +173,15 @@
         
         .btn-danger:hover {
             background-color: #c0392b;
+        }
+        
+        .btn-success {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
         }
         
         .footnote {
@@ -319,6 +332,10 @@
                 flex-direction: column;
                 align-items: center;
             }
+            
+            button {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
@@ -459,6 +476,7 @@
                 <button type="button" class="btn-secondary" id="clearBtn">Limpiar formulario</button>
                 <button type="button" class="btn-danger" id="clearSignatureBtn">Limpiar firma</button>
                 <button type="button" class="btn-primary" id="previewBtn">Vista previa para imprimir</button>
+                <button type="button" class="btn-success" id="downloadPdfBtn">Descargar PDF</button>
                 <button type="submit" class="btn-primary" id="submitBtn">Enviar declaración</button>
             </div>
             
@@ -470,6 +488,9 @@
     </div>
 
     <script>
+        // Cargar jsPDF
+        const { jsPDF } = window.jspdf;
+        
         // Manejo de la firma digital
         const canvas = document.getElementById('signatureCanvas');
         const ctx = canvas.getContext('2d');
@@ -663,6 +684,257 @@
             window.print();
         });
         
+        // Descargar PDF
+        document.getElementById('downloadPdfBtn').addEventListener('click', function() {
+            if (!validateForm()) {
+                alert('Por favor, complete todos los campos requeridos antes de generar el PDF.');
+                return;
+            }
+            
+            // Sincronizar campos del formulario
+            syncFormFields();
+            
+            // Generar PDF
+            generatePDF();
+        });
+        
+        // Función para sincronizar campos del formulario
+        function syncFormFields() {
+            const docNumber = document.getElementById('documentNumber').value;
+            const fullName = document.getElementById('fullName').value;
+            
+            document.getElementById('documentNumber2').value = docNumber;
+            
+            // Auto-completar el nombre en el campo de firma si está vacío
+            const printedNameField = document.getElementById('printedName');
+            if (!printedNameField.value) {
+                printedNameField.value = fullName;
+            }
+        }
+        
+        // Función para generar PDF
+        function generatePDF() {
+            try {
+                // Crear un nuevo documento PDF
+                const doc = new jsPDF('p', 'mm', 'a4');
+                
+                // Configuración de márgenes
+                const marginLeft = 15;
+                const marginRight = 15;
+                const pageWidth = 210;
+                const pageHeight = 297;
+                let yPosition = 20;
+                
+                // Obtener datos del formulario
+                const fullName = document.getElementById('fullName').value;
+                const documentNumber = document.getElementById('documentNumber').value;
+                const address = document.getElementById('address').value;
+                const admissionProcess = document.getElementById('admissionProcess').value;
+                const city = document.getElementById('city').value;
+                const day = document.getElementById('day').value;
+                const month = document.getElementById('month').value;
+                const year = document.getElementById('year').value;
+                const printedName = document.getElementById('printedName').value;
+                
+                // Configurar fuente y colores
+                doc.setFont("helvetica", "normal");
+                
+                // Encabezado - Institución
+                doc.setFontSize(12);
+                doc.setTextColor(12, 92, 23);
+                doc.setFont("helvetica", "bold");
+                doc.text("Instituto de Educación Superior Tecnológico Público", pageWidth / 2, yPosition, { align: "center" });
+                yPosition += 6;
+                doc.text("María Rosario Araoz Pinto", pageWidth / 2, yPosition, { align: "center" });
+                
+                yPosition += 10;
+                
+                // Título principal
+                doc.setFontSize(18);
+                doc.setTextColor(10, 190, 85);
+                doc.text("DECLARACIÓN JURADA DE SALUD", pageWidth / 2, yPosition, { align: "center" });
+                
+                yPosition += 8;
+                
+                // Subtítulo
+                doc.setFontSize(14);
+                doc.setTextColor(12, 92, 23);
+                doc.text("(DE NO PADECER COVID-19)", pageWidth / 2, yPosition, { align: "center" });
+                
+                yPosition += 15;
+                
+                // Datos personales
+                doc.setFontSize(12);
+                doc.setFont("helvetica", "bold");
+                doc.setTextColor(0, 0, 0);
+                doc.text("DATOS PERSONALES", marginLeft, yPosition);
+                
+                yPosition += 10;
+                
+                doc.setFontSize(11);
+                doc.setFont("helvetica", "normal");
+                doc.text(`Yo, ${fullName}`, marginLeft, yPosition);
+                
+                yPosition += 7;
+                doc.text(`Identificado(a) con N.º ${documentNumber}`, marginLeft, yPosition);
+                
+                yPosition += 7;
+                doc.text(`Domiciliado(a) en ${address}`, marginLeft, yPosition);
+                
+                yPosition += 7;
+                doc.text(`En condición de postulante del proceso de admisión ${admissionProcess}`, marginLeft, yPosition);
+                
+                yPosition += 15;
+                
+                // Título declaraciones
+                doc.setFontSize(12);
+                doc.setFont("helvetica", "bold");
+                doc.text("DECLARO QUE:", marginLeft, yPosition);
+                
+                yPosition += 10;
+                
+                // Declaración 1
+                doc.setFontSize(11);
+                doc.setFont("helvetica", "normal");
+                const declaration1 = "1. A la fecha NO PADEZCO de enfermedad del COVID-19, ni presento síntomas propios de ésta tales como fiebre, cansancio, tos seca, dificultad para respirar, dolor de garganta, diarrea, secreción nasal, dolores musculares y molestias propias de esta enfermedad y que no he estado expuesto a personas con la enfermedad o con los síntomas en las últimas 48 horas.";
+                const lines1 = doc.splitTextToSize(declaration1, pageWidth - marginLeft - marginRight);
+                doc.text(lines1, marginLeft, yPosition);
+                
+                yPosition += lines1.length * 6 + 5;
+                doc.text("✓ Confirmo que la declaración anterior es verdadera", marginLeft + 10, yPosition);
+                
+                yPosition += 15;
+                
+                // Verificar si necesitamos nueva página
+                if (yPosition > pageHeight - 80) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+                
+                // Declaración 2
+                const declaration2 = "2. No me encuentro dentro del grupo de riesgo para COVID-19, establecida en la Resolución Ministerial N° 972 – 2020 –MINSA de fecha 27 de noviembre de 2020.";
+                const lines2 = doc.splitTextToSize(declaration2, pageWidth - marginLeft - marginRight);
+                doc.text(lines2, marginLeft, yPosition);
+                
+                yPosition += lines2.length * 6 + 5;
+                doc.text("✓ Confirmo que no pertenezco a grupos de riesgo", marginLeft + 10, yPosition);
+                
+                yPosition += 15;
+                
+                // Declaración 3
+                const declaration3 = "3. No poseo ninguna condición de vulnerabilidad que ponga en riesgo mi salud y la de los demás.";
+                const lines3 = doc.splitTextToSize(declaration3, pageWidth - marginLeft - marginRight);
+                doc.text(lines3, marginLeft, yPosition);
+                
+                yPosition += lines3.length * 6 + 5;
+                doc.text("✓ Confirmo que no tengo condiciones de vulnerabilidad", marginLeft + 10, yPosition);
+                
+                yPosition += 15;
+                
+                // Advertencia
+                doc.setFont("helvetica", "bold");
+                doc.text("ADVERTENCIA:", marginLeft, yPosition);
+                doc.setFont("helvetica", "normal");
+                const warning = "En caso de resultar FALSA la información que proporcione, me someto a las responsabilidades administrativas, civiles y penales que haya a lugar conforme a las disposiciones normativas vigentes.";
+                const warningLines = doc.splitTextToSize(warning, pageWidth - marginLeft - marginRight);
+                doc.text(warningLines, marginLeft + 15, yPosition + 5);
+                
+                yPosition += warningLines.length * 6 + 20;
+                
+                // Fecha y lugar
+                doc.text(`${city}, ${day} de ${month} de ${year}`, marginLeft, yPosition);
+                
+                yPosition += 15;
+                
+                // Firma
+                doc.text("Firma:", marginLeft, yPosition);
+                
+                yPosition += 10;
+                
+                // Dibujar espacio para firma
+                doc.setDrawColor(0);
+                doc.setLineWidth(0.5);
+                doc.rect(marginLeft, yPosition, 80, 25);
+                
+                // Agregar la firma del canvas si existe
+                const signatureDataUrl = canvas.toDataURL();
+                if (signatureDataUrl && signaturePlaceholder.style.display === 'none') {
+                    try {
+                        doc.addImage(signatureDataUrl, 'PNG', marginLeft + 2, yPosition + 2, 76, 21);
+                    } catch (error) {
+                        console.error("Error al agregar firma:", error);
+                    }
+                }
+                
+                yPosition += 35;
+                
+                // Nombre en letra de molde
+                doc.text(`Apellidos y Nombres (en letra de molde): ${printedName}`, marginLeft, yPosition);
+                
+                // Nueva página para la huella digital
+                doc.addPage();
+                yPosition = 20;
+                
+                // Título segunda página
+                doc.setFontSize(12);
+                doc.setFont("helvetica", "bold");
+                doc.text("DATOS DE IDENTIFICACIÓN", marginLeft, yPosition);
+                
+                yPosition += 15;
+                
+                doc.setFontSize(11);
+                doc.setFont("helvetica", "normal");
+                doc.text(`D.N.I. o Carné de Extranjería: ${documentNumber}`, marginLeft, yPosition);
+                
+                yPosition += 20;
+                
+                // Huella digital
+                doc.setFont("helvetica", "bold");
+                doc.text("Huella digital", marginLeft, yPosition);
+                
+                yPosition += 10;
+                
+                // Dibujar espacio para huella
+                doc.setDrawColor(0);
+                doc.setLineWidth(0.5);
+                doc.rect(marginLeft, yPosition, 50, 40);
+                
+                // Agregar imagen de huella si existe
+                if (fingerprintImage.src && fingerprintImage.style.display !== 'none') {
+                    try {
+                        doc.addImage(fingerprintImage.src, 'PNG', marginLeft + 2, yPosition + 2, 46, 36);
+                    } catch (error) {
+                        console.error("Error al agregar imagen de huella:", error);
+                    }
+                }
+                
+                yPosition += 45;
+                
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "normal");
+                doc.text("Índice Derecho", marginLeft, yPosition);
+                
+                // Pie de página
+                const footerY = pageHeight - 20;
+                doc.setFontSize(9);
+                doc.setTextColor(100, 100, 100);
+                doc.text("Documento generado el " + new Date().toLocaleDateString('es-ES'), pageWidth / 2, footerY, { align: "center" });
+                doc.text("Declaración Jurada de Salud - COVID-19", pageWidth / 2, footerY + 5, { align: "center" });
+                
+                // Generar nombre del archivo
+                const fileName = `Declaracion_Jurada_Salud_${fullName.replace(/\s+/g, '_')}_${documentNumber}.pdf`;
+                
+                // Guardar PDF
+                doc.save(fileName);
+                
+                alert(`PDF generado exitosamente: ${fileName}`);
+                
+            } catch (error) {
+                console.error("Error al generar PDF:", error);
+                alert("Ocurrió un error al generar el PDF. Por favor, intente nuevamente.");
+            }
+        }
+        
         // Enviar formulario
         document.getElementById('healthDeclarationForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -686,18 +958,13 @@
                 }
             }
             
-            // Actualizar el segundo campo de documento con el valor del primero
-            const docNumber = document.getElementById('documentNumber').value;
-            document.getElementById('documentNumber2').value = docNumber;
-            
-            // Aquí normalmente se enviarían los datos a un servidor
-            // Por ahora, solo mostramos un mensaje de éxito
-            const fullName = document.getElementById('fullName').value;
+            // Sincronizar campos del formulario
+            syncFormFields();
             
             // Preparar datos para envío (simulado)
             const formData = {
-                fullName: fullName,
-                documentNumber: docNumber,
+                fullName: document.getElementById('fullName').value,
+                documentNumber: document.getElementById('documentNumber').value,
                 address: document.getElementById('address').value,
                 admissionProcess: document.getElementById('admissionProcess').value,
                 date: `${document.getElementById('day').value}/${document.getElementById('month').value}/${document.getElementById('year').value}`,
@@ -712,7 +979,7 @@
             
             console.log('Datos del formulario:', formData);
             
-            alert(`¡Declaración jurada enviada con éxito!\n\nGracias ${fullName} por completar su declaración de salud. Sus datos han sido registrados.`);
+            alert(`¡Declaración jurada enviada con éxito!\n\nGracias ${formData.fullName} por completar su declaración de salud. Sus datos han sido registrados.`);
             
             // Podríamos agregar aquí la lógica para enviar el formulario a un servidor
             // Por ejemplo: fetch('/submit-declaration', { method: 'POST', body: JSON.stringify(formData) })
@@ -720,24 +987,25 @@
         
         // Función de validación
         function validateForm() {
-            const requiredFields = document.querySelectorAll('input[required], checkbox[required]');
+            const requiredFields = document.querySelectorAll('input[required]');
+            const requiredCheckboxes = document.querySelectorAll('input[type="checkbox"][required]');
             let isValid = true;
             
             requiredFields.forEach(field => {
-                if (field.type === 'checkbox') {
-                    if (!field.checked) {
-                        isValid = false;
-                        field.parentElement.style.color = 'red';
-                    } else {
-                        field.parentElement.style.color = '';
-                    }
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = 'red';
                 } else {
-                    if (!field.value.trim()) {
-                        isValid = false;
-                        field.style.borderColor = 'red';
-                    } else {
-                        field.style.borderColor = '';
-                    }
+                    field.style.borderColor = '';
+                }
+            });
+            
+            requiredCheckboxes.forEach(checkbox => {
+                if (!checkbox.checked) {
+                    isValid = false;
+                    checkbox.parentElement.style.color = 'red';
+                } else {
+                    checkbox.parentElement.style.color = '';
                 }
             });
             
@@ -785,6 +1053,21 @@
                 fingerprintFileInput.dispatchEvent(event);
             }
         });
+        
+        // Configurar fecha actual
+        const today = new Date();
+        const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
+                       'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        
+        // Establecer día actual si no hay valor
+        if (!document.getElementById('day').value) {
+            document.getElementById('day').value = today.getDate();
+        }
+        
+        // Establecer mes actual si no hay valor
+        if (!document.getElementById('month').value) {
+            document.getElementById('month').value = months[today.getMonth()];
+        }
     </script>
 </body>
 </html>
