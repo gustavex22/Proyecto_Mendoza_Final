@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Declaración Jurada - Menor de Edad</title>
+    <!-- Agregar jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -139,6 +141,8 @@
             margin-top: 10px;
             padding: 10px;
             background-color: white;
+            position: relative;
+            cursor: crosshair;
         }
         
         .warning {
@@ -157,6 +161,8 @@
             padding: 20px;
             background-color: #f8f9fa;
             border-top: 1px solid #ddd;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .btn {
@@ -167,6 +173,7 @@
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
+            min-width: 180px;
         }
         
         .btn-reset {
@@ -187,6 +194,15 @@
             background-color: #1a252f;
         }
         
+        .btn-pdf {
+            background-color: #9b59b6;
+            color: white;
+        }
+        
+        .btn-pdf:hover {
+            background-color: #8e44ad;
+        }
+        
         .required {
             color: #e74c3c;
         }
@@ -196,6 +212,14 @@
             color: #7f8c8d;
             font-size: 14px;
             margin-top: 10px;
+        }
+        
+        .signature-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
         
         @media print {
@@ -221,6 +245,15 @@
             
             .form-section {
                 padding: 15px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
             }
         }
     </style>
@@ -384,7 +417,8 @@
                     
                     <label>Firma del apoderado <span class="required">*</span></label>
                     <div class="signature-box" id="signatureBox">
-                        <p>Firma aquí o en el espacio destinado para tal efecto</p>
+                        <canvas id="signatureCanvas" class="signature-canvas"></canvas>
+                        <p id="signaturePlaceholder">Firma aquí o en el espacio destinado para tal efecto</p>
                     </div>
                     
                     <div style="margin-top: 10px;">
@@ -406,98 +440,502 @@
             
             <div class="buttons">
                 <button type="reset" class="btn btn-reset">Limpiar formulario</button>
+                <button type="button" class="btn btn-pdf" id="btnPdf">Descargar PDF</button>
                 <button type="submit" class="btn btn-submit">Enviar declaración jurada</button>
             </div>
         </form>
     </div>
 
     <script>
+        // Cargar jsPDF
+        const { jsPDF } = window.jspdf;
+        
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('declaracionForm');
             const signatureBox = document.getElementById('signatureBox');
+            const signatureCanvas = document.getElementById('signatureCanvas');
+            const signaturePlaceholder = document.getElementById('signaturePlaceholder');
             const clearSignatureBtn = document.getElementById('clearSignature');
+            const btnPdf = document.getElementById('btnPdf');
+            
+            // Configurar canvas para firma
+            const ctx = signatureCanvas.getContext('2d');
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+            
+            // Ajustar tamaño del canvas
+            function resizeCanvas() {
+                const box = signatureBox.getBoundingClientRect();
+                signatureCanvas.width = box.width;
+                signatureCanvas.height = box.height;
+                
+                // Configurar estilo de dibujo
+                ctx.lineWidth = 2;
+                ctx.lineJoin = 'round';
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = '#000000';
+            }
+            
+            // Inicializar canvas
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Eventos para dibujar en el canvas
+            signatureCanvas.addEventListener('mousedown', function(e) {
+                isDrawing = true;
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+                signaturePlaceholder.style.display = 'none';
+            });
+            
+            signatureCanvas.addEventListener('mousemove', function(e) {
+                if (!isDrawing) return;
+                e.preventDefault();
+                
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+                
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            });
+            
+            signatureCanvas.addEventListener('mouseup', function() {
+                isDrawing = false;
+            });
+            
+            signatureCanvas.addEventListener('mouseout', function() {
+                isDrawing = false;
+            });
+            
+            // Eventos táctiles para dispositivos móviles
+            signatureCanvas.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = signatureCanvas.getBoundingClientRect();
+                isDrawing = true;
+                [lastX, lastY] = [touch.clientX - rect.left, touch.clientY - rect.top];
+                signaturePlaceholder.style.display = 'none';
+            });
+            
+            signatureCanvas.addEventListener('touchmove', function(e) {
+                if (!isDrawing) return;
+                e.preventDefault();
+                
+                const touch = e.touches[0];
+                const rect = signatureCanvas.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                
+                [lastX, lastY] = [x, y];
+            });
+            
+            signatureCanvas.addEventListener('touchend', function() {
+                isDrawing = false;
+            });
+            
+            // Limpiar firma
+            clearSignatureBtn.addEventListener('click', function() {
+                ctx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+                signaturePlaceholder.style.display = 'block';
+            });
             
             // Configurar fecha actual por defecto
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('fecha').value = today;
             
-            // Simulación simple de firma (en una implementación real usarías una librería de firma)
-            let isDrawing = false;
-            
-            signatureBox.addEventListener('mousedown', function(e) {
-                isDrawing = true;
-                drawSignature(e);
-            });
-            
-            signatureBox.addEventListener('mousemove', function(e) {
-                if (isDrawing) {
-                    drawSignature(e);
+            // Botón para descargar PDF
+            btnPdf.addEventListener('click', function() {
+                if (!validarFormulario()) {
+                    return;
                 }
-            });
-            
-            signatureBox.addEventListener('mouseup', function() {
-                isDrawing = false;
-            });
-            
-            signatureBox.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                isDrawing = true;
-                drawSignature(e.touches[0]);
-            });
-            
-            signatureBox.addEventListener('touchmove', function(e) {
-                e.preventDefault();
-                if (isDrawing) {
-                    drawSignature(e.touches[0]);
+                
+                // Verificar que haya firma
+                const signatureDots = signaturePlaceholder.style.display === 'none';
+                if (!signatureDots) {
+                    if (!confirm('No ha proporcionado su firma. ¿Desea continuar de todos modos?')) {
+                        return;
+                    }
                 }
+                
+                generarPDF();
             });
             
-            signatureBox.addEventListener('touchend', function() {
-                isDrawing = false;
-            });
-            
-            function drawSignature(event) {
-                const rect = signatureBox.getBoundingClientRect();
-                const x = event.clientX - rect.left;
-                const y = event.clientY - rect.top;
-                
-                const dot = document.createElement('div');
-                dot.style.position = 'absolute';
-                dot.style.left = x + 'px';
-                dot.style.top = y + 'px';
-                dot.style.width = '3px';
-                dot.style.height = '3px';
-                dot.style.backgroundColor = 'black';
-                dot.style.borderRadius = '50%';
-                
-                signatureBox.appendChild(dot);
-                signatureBox.style.position = 'relative';
+            // Función para generar PDF
+            function generarPDF() {
+                try {
+                    // Crear un nuevo documento PDF
+                    const doc = new jsPDF('p', 'mm', 'a4');
+                    
+                    // Configuración de márgenes
+                    const marginLeft = 15;
+                    const marginRight = 15;
+                    const pageWidth = 210;
+                    const pageHeight = 297;
+                    let yPosition = 20;
+                    
+                    // Obtener datos del formulario
+                    const nombresApoderado = document.getElementById('nombresApoderado').value;
+                    const apellidosApoderado = document.getElementById('apellidosApoderado').value;
+                    const dniApoderado = document.getElementById('dniApoderado').value;
+                    const domicilioApoderado = document.getElementById('domicilioApoderado').value;
+                    const parentesco = document.getElementById('parentesco').value;
+                    const nombresPostulante = document.getElementById('nombresPostulante').value;
+                    const apellidosPostulante = document.getElementById('apellidosPostulante').value;
+                    const dniPostulante = document.getElementById('dniPostulante').value;
+                    const institucionEducativa = document.getElementById('institucionEducativa').value;
+                    const ciudad = document.getElementById('ciudad').value;
+                    const region = document.getElementById('region').value;
+                    const provincia = document.getElementById('provincia').value;
+                    const fecha = document.getElementById('fecha').value;
+                    const dniFirma = document.getElementById('dniFirma').value;
+                    const huellaDigital = document.getElementById('huellaDigital').value;
+                    
+                    // Configurar fuente y colores
+                    doc.setFont("helvetica", "normal");
+                    
+                    // ========== ENCABEZADO INSTITUCIONAL ==========
+                    doc.setFontSize(14);
+                    doc.setFont("helvetica", "bold");
+                    doc.setTextColor(44, 62, 80);
+                    doc.text("P.B.U Ministerio de Educación", pageWidth / 2, yPosition, { align: "center" });
+                    yPosition += 6;
+                    
+                    doc.setFontSize(12);
+                    doc.text("Dirección Regional", pageWidth / 2, yPosition, { align: "center" });
+                    yPosition += 8;
+                    
+                    doc.setFontSize(16);
+                    doc.text("DECLARACIÓN JURADA DE DOCUMENTOS", pageWidth / 2, yPosition, { align: "center" });
+                    yPosition += 8;
+                    
+                    doc.setFontSize(14);
+                    doc.text("(POSTULANTE MENOR DE EDAD)", pageWidth / 2, yPosition, { align: "center" });
+                    
+                    yPosition += 10;
+                    
+                    // Institución
+                    doc.setFontSize(12);
+                    doc.text("Instituto de Educación Superior Tecnológico Público", pageWidth / 2, yPosition, { align: "center" });
+                    yPosition += 6;
+                    doc.text("María Rosario Araoz Pinto", pageWidth / 2, yPosition, { align: "center" });
+                    
+                    yPosition += 15;
+                    
+                    // ========== PÁGINA 1: DATOS DEL APODERADO Y POSTULANTE ==========
+                    doc.setFontSize(12);
+                    doc.setFont("helvetica", "bold");
+                    doc.text("DATOS DEL APODERADO Y POSTULANTE", marginLeft, yPosition);
+                    
+                    yPosition += 10;
+                    
+                    // Datos del apoderado
+                    doc.setFontSize(11);
+                    doc.setFont("helvetica", "bold");
+                    doc.text("Apoderado:", marginLeft, yPosition);
+                    doc.setFont("helvetica", "normal");
+                    const nombreApoderado = `${nombresApoderado} ${apellidosApoderado}`;
+                    doc.text(nombreApoderado, marginLeft + 30, yPosition);
+                    
+                    yPosition += 7;
+                    
+                    doc.setFont("helvetica", "bold");
+                    doc.text("DNI:", marginLeft, yPosition);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(dniApoderado, marginLeft + 15, yPosition);
+                    
+                    doc.setFont("helvetica", "bold");
+                    doc.text("Domicilio:", marginLeft + 80, yPosition);
+                    doc.setFont("helvetica", "normal");
+                    const domicilioLines = doc.splitTextToSize(domicilioApoderado, pageWidth - marginLeft - marginRight - 90);
+                    doc.text(domicilioLines, marginLeft + 105, yPosition);
+                    yPosition += domicilioLines.length * 6;
+                    
+                    yPosition += 5;
+                    
+                    doc.setFont("helvetica", "bold");
+                    doc.text("Parentesco:", marginLeft, yPosition);
+                    doc.setFont("helvetica", "normal");
+                    const parentescoTexto = parentesco.charAt(0).toUpperCase() + parentesco.slice(1);
+                    doc.text(parentescoTexto, marginLeft + 30, yPosition);
+                    
+                    yPosition += 15;
+                    
+                    // Datos del postulante
+                    doc.setFontSize(12);
+                    doc.setFont("helvetica", "bold");
+                    doc.text("DATOS DEL POSTULANTE (MENOR DE EDAD)", marginLeft, yPosition);
+                    
+                    yPosition += 10;
+                    
+                    doc.setFontSize(11);
+                    doc.setFont("helvetica", "bold");
+                    doc.text("Nombre completo:", marginLeft, yPosition);
+                    doc.setFont("helvetica", "normal");
+                    const nombrePostulante = `${nombresPostulante} ${apellidosPostulante}`;
+                    doc.text(nombrePostulante, marginLeft + 40, yPosition);
+                    
+                    yPosition += 7;
+                    
+                    doc.setFont("helvetica", "bold");
+                    doc.text("DNI:", marginLeft, yPosition);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(dniPostulante, marginLeft + 15, yPosition);
+                    
+                    yPosition += 15;
+                    
+                    // ========== PÁGINA 2: DECLARACIÓN BAJO JURAMENTO ==========
+                    // Nueva página si es necesario
+                    if (yPosition > pageHeight - 100) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    
+                    doc.setFontSize(12);
+                    doc.setFont("helvetica", "bold");
+                    doc.text("DECLARACIÓN BAJO JURAMENTO", marginLeft, yPosition);
+                    
+                    yPosition += 10;
+                    
+                    doc.setFontSize(11);
+                    doc.setFont("helvetica", "bold");
+                    doc.text("DECLARO BAJO JURAMENTO QUE:", marginLeft, yPosition);
+                    
+                    yPosition += 10;
+                    
+                    // Declaración I
+                    doc.setFont("helvetica", "normal");
+                    const declaracion1 = "I. Mis datos personales y los de mi hijo(a) o apoderante consignados en la presente declaración jurada y en la inscripción vía web de la IESTP María Rosario Araoz Pinto son los mismos que figuran en los documentos de identidad (DNI, pasaporte o carné de extranjería).";
+                    const lines1 = doc.splitTextToSize(declaracion1, pageWidth - marginLeft - marginRight);
+                    doc.text(lines1, marginLeft, yPosition);
+                    
+                    yPosition += lines1.length * 6 + 5;
+                    doc.text("✓ Confirmo", marginLeft + 10, yPosition);
+                    
+                    yPosition += 10;
+                    
+                    // Declaración II
+                    const declaracion2 = "II. Los documentos proporcionados virtualmente en la inscripción son fidedignos a los originales y no tienen ninguna modificación o alteración.";
+                    const lines2 = doc.splitTextToSize(declaracion2, pageWidth - marginLeft - marginRight);
+                    doc.text(lines2, marginLeft, yPosition);
+                    
+                    yPosition += lines2.length * 6 + 5;
+                    doc.text("✓ Confirmo", marginLeft + 10, yPosition);
+                    
+                    yPosition += 10;
+                    
+                    // Declaración III
+                    const declaracion3 = "III. Mi hijo(a) o apoderante ha culminado satisfactoriamente sus estudios de nivel secundaria en la Institución Educativa:";
+                    const lines3 = doc.splitTextToSize(declaracion3, pageWidth - marginLeft - marginRight);
+                    doc.text(lines3, marginLeft, yPosition);
+                    
+                    yPosition += lines3.length * 6 + 5;
+                    doc.text("✓ Confirmo", marginLeft + 10, yPosition);
+                    
+                    yPosition += 15;
+                    
+                    // Datos de la institución educativa
+                    doc.text(`Institución Educativa: ${institucionEducativa}`, marginLeft, yPosition);
+                    
+                    yPosition += 8;
+                    doc.text(`Ciudad: ${ciudad}`, marginLeft, yPosition);
+                    
+                    yPosition += 8;
+                    doc.text(`Región: ${region}`, marginLeft, yPosition);
+                    
+                    yPosition += 8;
+                    doc.text(`Provincia: ${provincia}`, marginLeft, yPosition);
+                    
+                    yPosition += 15;
+                    
+                    // Texto sobre emergencia sanitaria
+                    const emergenciaTexto = "...y que por motivos de la emergencia sanitaria a nivel nacional, no es posible tramitar el certificado de estudios y en caso de ocupar una vacante en el proceso de Admisión no presencial me comprometo a regularizar la entrega de dichos certificados en original de forma virtual (o física si en caso termina la emergencia sanitaria). Caso contrario, me someto a las disposiciones que la autoridad del IESTP María Rosario Araoz Pinto y el equipo técnico de admisión estime pertinente.";
+                    const emergenciaLines = doc.splitTextToSize(emergenciaTexto, pageWidth - marginLeft - marginRight);
+                    doc.text(emergenciaLines, marginLeft, yPosition);
+                    yPosition += emergenciaLines.length * 6 + 15;
+                    
+                    // ========== PÁGINA 3: FIRMA Y ADVERTENCIAS ==========
+                    // Nueva página
+                    doc.addPage();
+                    yPosition = 20;
+                    
+                    // Advertencia
+                    doc.setFontSize(11);
+                    doc.setFont("helvetica", "bold");
+                    doc.text("ADVERTENCIA:", marginLeft, yPosition);
+                    doc.setFont("helvetica", "normal");
+                    const advertenciaTexto = "Comprobarse la falsedad de la información registrada al momento de mi inscripción. De faltar a la verdad en esta declaración me sujeto a los alcances de lo establecido en el artículo 411° del Código Penal y acepto la anulación del examen de admisión del TESTP María Rosario Araoz Pinto, sin lugar a reclamo.";
+                    const advertenciaLines = doc.splitTextToSize(advertenciaTexto, pageWidth - marginLeft - marginRight);
+                    doc.text(advertenciaLines, marginLeft + 10, yPosition + 5);
+                    
+                    yPosition += advertenciaLines.length * 6 + 20;
+                    
+                    // Sección de firma
+                    doc.setFontSize(12);
+                    doc.setFont("helvetica", "bold");
+                    doc.text("FIRMA DEL APODERADO", marginLeft, yPosition);
+                    
+                    yPosition += 10;
+                    
+                    // Fecha
+                    const fechaFormateada = new Date(fecha).toLocaleDateString('es-ES');
+                    doc.setFontSize(11);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(`Fecha: ${fechaFormateada}`, marginLeft, yPosition);
+                    
+                    yPosition += 8;
+                    doc.text(`DNI del apoderado (para verificación): ${dniFirma}`, marginLeft, yPosition);
+                    
+                    yPosition += 15;
+                    
+                    doc.text("Firma del apoderado:", marginLeft, yPosition);
+                    
+                    yPosition += 10;
+                    
+                    // Dibujar espacio para firma
+                    doc.setDrawColor(0);
+                    doc.setLineWidth(0.5);
+                    doc.rect(marginLeft, yPosition, 80, 25);
+                    
+                    // Agregar la firma del canvas si existe
+                    const signatureDataUrl = signatureCanvas.toDataURL();
+                    if (signatureDataUrl && signaturePlaceholder.style.display === 'none') {
+                        try {
+                            doc.addImage(signatureDataUrl, 'PNG', marginLeft + 2, yPosition + 2, 76, 21);
+                        } catch (error) {
+                            console.error("Error al agregar firma:", error);
+                        }
+                    }
+                    
+                    yPosition += 35;
+                    
+                    // Huella digital
+                    doc.text("Huella digital (índice derecho):", marginLeft, yPosition);
+                    doc.text(huellaDigital || "Se registrará físicamente", marginLeft + 50, yPosition);
+                    
+                    yPosition += 20;
+                    
+                    // Artículo 411° del Código Penal
+                    doc.setFont("helvetica", "bold");
+                    doc.text("Artículo 411° del Código Penal:", marginLeft, yPosition);
+                    doc.setFont("helvetica", "normal");
+                    const articuloTexto = "El que, en un procedimiento administrativo, hace una falsa declaración en relación a hechos o circunstancias que le corresponde probar, violando la presunción de veracidad establecida por ley, será reprimido con pena privativa de libertad no menor de uno ni mayor de cuatro años.";
+                    const articuloLines = doc.splitTextToSize(articuloTexto, pageWidth - marginLeft - marginRight);
+                    doc.text(articuloLines, marginLeft, yPosition + 5);
+                    
+                    // Pie de página
+                    const footerY = pageHeight - 20;
+                    doc.setFontSize(9);
+                    doc.setTextColor(100, 100, 100);
+                    doc.text("Documento generado el " + new Date().toLocaleDateString('es-ES'), pageWidth / 2, footerY, { align: "center" });
+                    doc.text("Declaración Jurada de Documentos - Postulante Menor de Edad", pageWidth / 2, footerY + 5, { align: "center" });
+                    
+                    // Generar nombre del archivo
+                    const nombreArchivo = `Declaracion_Jurada_${apellidosApoderado}_${dniApoderado}.pdf`;
+                    
+                    // Guardar PDF
+                    doc.save(nombreArchivo);
+                    
+                    alert(`PDF generado exitosamente: ${nombreArchivo}`);
+                    
+                } catch (error) {
+                    console.error("Error al generar PDF:", error);
+                    alert("Ocurrió un error al generar el PDF. Por favor, intente nuevamente.");
+                }
             }
             
-            clearSignatureBtn.addEventListener('click', function() {
-                const dots = signatureBox.querySelectorAll('div');
-                dots.forEach(dot => dot.remove());
-            });
-            
-            // Validación del formulario
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
+            // Función de validación
+            function validarFormulario() {
+                // Validar campos obligatorios
+                const camposObligatorios = [
+                    'nombresApoderado',
+                    'apellidosApoderado',
+                    'dniApoderado',
+                    'domicilioApoderado',
+                    'parentesco',
+                    'nombresPostulante',
+                    'apellidosPostulante',
+                    'dniPostulante',
+                    'institucionEducativa',
+                    'ciudad',
+                    'region',
+                    'provincia',
+                    'fecha',
+                    'dniFirma'
+                ];
                 
-                // Validar que todas las declaraciones estén marcadas
+                let valido = true;
+                
+                camposObligatorios.forEach(campo => {
+                    const elemento = document.getElementById(campo);
+                    if (!elemento.value.trim()) {
+                        valido = false;
+                        elemento.style.borderColor = '#e74c3c';
+                        elemento.style.backgroundColor = '#ffe6e6';
+                    } else {
+                        elemento.style.borderColor = '';
+                        elemento.style.backgroundColor = '';
+                    }
+                });
+                
+                // Validar checkboxes
                 const declaracion1 = document.getElementById('declaracion1');
                 const declaracion2 = document.getElementById('declaracion2');
                 const declaracion3 = document.getElementById('declaracion3');
                 
                 if (!declaracion1.checked || !declaracion2.checked || !declaracion3.checked) {
+                    valido = false;
                     alert('Debe aceptar todas las declaraciones bajo juramento.');
+                }
+                
+                // Validar formato de DNI
+                const dniRegex = /^[0-9]{8}$/;
+                const dniApoderado = document.getElementById('dniApoderado').value;
+                const dniPostulante = document.getElementById('dniPostulante').value;
+                const dniFirmaVal = document.getElementById('dniFirma').value;
+                
+                if (dniApoderado && !dniRegex.test(dniApoderado)) {
+                    valido = false;
+                    alert('El DNI del apoderado debe tener 8 dígitos numéricos.');
+                }
+                
+                if (dniPostulante && !dniRegex.test(dniPostulante)) {
+                    valido = false;
+                    alert('El DNI del postulante debe tener 8 dígitos numéricos.');
+                }
+                
+                if (dniFirmaVal && !dniRegex.test(dniFirmaVal)) {
+                    valido = false;
+                    alert('El DNI de verificación debe tener 8 dígitos numéricos.');
+                }
+                
+                if (!valido) {
+                    alert('Por favor complete todos los campos requeridos correctamente.');
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            // Validación del formulario al enviar
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!validarFormulario()) {
                     return;
                 }
                 
-                // Validar que haya firma (al menos un punto dibujado)
-                const signatureDots = signatureBox.querySelectorAll('div');
-                if (signatureDots.length === 0) {
-                    alert('Debe proporcionar su firma en el espacio correspondiente.');
-                    return;
+                // Verificar que haya firma
+                const signatureDots = signaturePlaceholder.style.display === 'none';
+                if (!signatureDots) {
+                    if (!confirm('No ha proporcionado su firma. ¿Desea continuar de todos modos?')) {
+                        return;
+                    }
                 }
                 
                 // Si todo está correcto, mostrar confirmación
@@ -516,9 +954,29 @@
             const dniFirmaInput = document.getElementById('dniFirma');
             
             dniApoderadoInput.addEventListener('blur', function() {
-                if (!dniFirmaInput.value) {
+                if (!dniFirmaInput.value && dniApoderadoInput.value) {
                     dniFirmaInput.value = dniApoderadoInput.value;
                 }
+            });
+            
+            // Validar DNI en tiempo real
+            function validarDNI(input) {
+                input.value = input.value.replace(/\D/g, '');
+                if (input.value.length > 8) {
+                    input.value = input.value.substring(0, 8);
+                }
+            }
+            
+            dniApoderadoInput.addEventListener('input', function() {
+                validarDNI(this);
+            });
+            
+            document.getElementById('dniPostulante').addEventListener('input', function() {
+                validarDNI(this);
+            });
+            
+            dniFirmaInput.addEventListener('input', function() {
+                validarDNI(this);
             });
         });
     </script>
