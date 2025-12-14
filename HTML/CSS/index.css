@@ -1,0 +1,30 @@
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .header-top {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-card {
+            border-top: 5px solid #16a34a;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-orange {
+            background-color: #f97316;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            /* Quitar subrayado de enlace */
+            display: inline-flex;
+            /* Para que se comporte como botón */
+        }
+
+        .btn-orange:hover {
+            background-color: #ea580c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(249, 115, 22, 0.4);
+        }
