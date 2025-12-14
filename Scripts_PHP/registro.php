@@ -210,16 +210,16 @@
                         <h4 class="font-bold text-blue-800 mb-2"><i class="fas fa-download mr-2"></i>Paso 1: Descarga
                             los formatos</h4>
                         <div class="flex flex-wrap gap-3">
-                            <a href="docs/solicitud_director.pdf" target="_blank"
+                            <a href="../HTML/SoliDirec.html" target="_blank"
                                 class="px-3 py-2 bg-white text-blue-600 text-sm font-medium rounded border border-blue-200 hover:bg-blue-100">
                                 <i class="fas fa-file-pdf mr-1"></i> Solicitud al Director
                             </a>
                             <!-- Enlaces dinámicos -->
-                            <a id="link-salud" href="docs/dj_salud_mayor.pdf" target="_blank"
+                            <a id="link-salud" href="../HTML/DeclaSalud.html" target="_blank"
                                 class="px-3 py-2 bg-white text-green-600 text-sm font-medium rounded border border-green-200 hover:bg-green-50">
                                 <i class="fas fa-file-medical mr-1"></i> DJ Salud (MAYOR)
                             </a>
-                            <a id="link-dinero" href="docs/dj_dinero_mayor.pdf" target="_blank"
+                            <a id="link-dinero" href="../HTML/DeclaJuraMayor.html" target="_blank"
                                 class="px-3 py-2 bg-white text-green-600 text-sm font-medium rounded border border-green-200 hover:bg-green-50">
                                 <i class="fas fa-file-invoice-dollar mr-1"></i> DJ Dinero (MAYOR)
                             </a>
@@ -239,6 +239,11 @@
                                 class="block w-full text-sm text-gray-500" required>
                         </div>
                         <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Soli Direc. (Firmada)
+                                    *</label>
+                                <input type="file" name="archivo_dj_salud" accept=".pdf, .jpg" class="w-full" required>
+                            </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">DJ de Salud (Firmada)
                                     *</label>
@@ -297,11 +302,11 @@
                 seccionApoderado.style.display = 'block';
                 inputsApoderado.forEach(input => input.required = true);
 
-                linkSalud.href = "docs/dj_salud_menor.pdf";
+                linkSalud.href = "../HTML/DeclaJuraSaludMenor.html";
                 linkSalud.innerHTML = '<i class="fas fa-file-medical mr-1"></i> DJ Salud (MENOR)';
                 linkSalud.className = "px-3 py-2 bg-white text-orange-600 text-sm font-medium rounded border border-orange-200 hover:bg-orange-50";
 
-                linkDinero.href = "docs/dj_dinero_menor.pdf";
+                linkDinero.href = "../HTML/DeclaJuraMenor.html";
                 linkDinero.innerHTML = '<i class="fas fa-file-invoice-dollar mr-1"></i> DJ Dinero (MENOR)';
                 linkDinero.className = "px-3 py-2 bg-white text-orange-600 text-sm font-medium rounded border border-orange-200 hover:bg-orange-50";
             } else {
@@ -312,11 +317,11 @@
                 // Limpiar campos de apoderado si cambia de opinión
                 inputsApoderado.forEach(input => input.value = '');
 
-                linkSalud.href = "docs/dj_salud_mayor.pdf";
+                linkSalud.href = "../HTML/DeclaSalud.html";
                 linkSalud.innerHTML = '<i class="fas fa-file-medical mr-1"></i> DJ Salud (MAYOR)';
                 linkSalud.className = "px-3 py-2 bg-white text-green-600 text-sm font-medium rounded border border-green-200 hover:bg-green-50";
 
-                linkDinero.href = "docs/dj_dinero_mayor.pdf";
+                linkDinero.href = "../HTML/DeclaJuraMayor.html";
                 linkDinero.innerHTML = '<i class="fas fa-file-invoice-dollar mr-1"></i> DJ Dinero (MAYOR)';
                 linkDinero.className = "px-3 py-2 bg-white text-green-600 text-sm font-medium rounded border border-green-200 hover:bg-green-50";
             }
