@@ -6,14 +6,23 @@
     <title>Declaración Jurada de Salud - COVID-19</title>
     <!-- Agregar jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link rel="stylesheet" href="CSS/DeclaSaludUnified.css">
+    <link rel="stylesheet" href="CSS\RenJurada.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>DECLARACIÓN JURADA DE SALUD</h1>
-            <h2>(DE NO PADECER COVID-19)</h2>
-            <p>Instituto de Educación Superior Tecnológico Público<br>María Rosario Araoz Pinto</p>
+            <div class="header-line">
+                <div>IESTP María Rosario Araoz Pinto</div>
+                <div>Ministerio de Educación</div>
+            </div>
+
+            <div class="institution-name">
+                INSTITUTO DE EDUCACIÓN SUPERIOR TECNOLÓGICO PÚBLICO<br>
+                MARÍA ROSARIO ARAOZ PINTO
+            </div>
+
+            <h1 class="main-title">DECLARACIÓN JURADA DE SALUD</h1>
+            <h2 class="subtitle">(DE NO PADECER COVID-19)</h2>
         </div>
         
         <form id="healthDeclarationForm">
@@ -80,13 +89,15 @@
             <div class="form-section">
                 <div class="form-group">
                     <label for="city">Lima,</label>
-                    <input type="text" id="city" name="city" value="Lima" readonly style="width: 100px; display: inline-block; margin-right: 10px;">
-                    <label for="day" style="display: inline-block; margin-right: 5px;">de</label>
-                    <input type="text" id="day" name="day" placeholder="día" style="width: 60px; display: inline-block; margin-right: 5px;" required>
-                    <label for="month" style="display: inline-block; margin-right: 5px;">de</label>
-                    <input type="text" id="month" name="month" placeholder="mes" style="width: 100px; display: inline-block; margin-right: 5px;" required>
-                    <label for="year" style="display: inline-block; margin-right: 5px;">de</label>
-                    <input type="text" id="year" name="year" value="2024" style="width: 80px; display: inline-block;" required>
+                    <div class="date-inputs">
+                        <input type="text" id="city" name="city" value="Lima" readonly>
+                        <label for="day">de</label>
+                        <input type="text" id="day" name="day" placeholder="día" required>
+                        <label for="month">de</label>
+                        <input type="text" id="month" name="month" placeholder="mes" required>
+                        <label for="year">de</label>
+                        <input type="text" id="year" name="year" value="2024" required>
+                    </div>
                 </div>
             </div>
             
