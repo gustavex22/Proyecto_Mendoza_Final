@@ -18,12 +18,12 @@ CREATE TABLE Estudiante (
     Apellido_Materno_del_apoderado varchar(150)
 );
 CREATE TABLE Documentos(
-    Acta_de_compromiso BOOL DEFAULT FALSE,
-    No_devolucion_de_dinero_Menor_de_edad BOOL DEFAULT FALSE,
-    Declaracion_jurada_de_certificación_Menor_de_edad BOOL DEFAULT FALSE,
-    Declaracion_jurada_de_Salud_Menor_de__edad BOOL DEFAULT FALSE,
-    No_devolucion_de_dinero_Mayor_de_edad BOOL DEFAULT FALSE,
-    Declaracion_Jurada_de_salud_Mayor_de_edad BOOL DEFAULT FALSE,
+    Acta_de_compromiso LONGBLOB,
+    No_devolucion_de_dinero_Menor_de_edad LONGBLOB,
+    Declaracion_jurada_de_certificación_Menor_de_edad LONGBLOB,
+    Declaracion_jurada_de_Salud_Menor_de__edad LONGBLOB,
+    No_devolucion_de_dinero_Mayor_de_edad LONGBLOB,
+    Declaracion_Jurada_de_salud_Mayor_de_edad LONGBLOB,
     estudiante_DNI INT UNIQUE,
     FOREIGN KEY (estudiante_DNI) REFERENCES Estudiante(DNI)
 );
