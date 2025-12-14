@@ -37,6 +37,29 @@
                     <input type="date" id="fecha">
                 </div>
                 
+                <!-- Sección de firma virtual -->
+                <div class="signature-section">
+                    <div class="signature-header">
+                        <span>✍️ Firma Virtual</span>
+                        <div class="signature-buttons">
+                            <button onclick="limpiarFirma()" type="button" class="btn-clear">Limpiar</button>
+                            <button onclick="guardarFirma()" type="button" class="btn-save">Guardar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="signature-container">
+                        <canvas id="signatureCanvas" width="400" height="150"></canvas>
+                        <div class="signature-instructions">
+                            Dibuje su firma en el área superior
+                        </div>
+                    </div>
+                    
+                    <div id="signaturePreview" class="signature-preview-container" style="display: none;">
+                        <div class="signature-preview-label">Firma guardada:</div>
+                        <img id="signatureImage" class="signature-preview-img" alt="Vista previa de firma">
+                    </div>
+                </div>
+                
                 <div class="fingerprint-section" id="fingerprintArea">
                     <div>📷 Subir Huella Digital (Índice Derecho)</div>
                     <div style="font-size: 12px; color: #666; margin-top: 5px;">
@@ -51,7 +74,7 @@
                 <button class="btn-primary" onclick="actualizarVistaPrevia()">Actualizar Vista</button>
                 <button class="btn-success" onclick="generarPDF()">Generar PDF</button>
                 <button onclick="imprimirDocumento()">Imprimir</button>
-                <button onclick="limpiarFormulario()">Limpiar</button>
+                <button onclick="limpiarFormulario()">Limpiar Todo</button>
             </div>
         </div>
         
@@ -109,8 +132,16 @@
                     Lima, ____ de _______________ de ____
                 </div>
                 
-                <div class="pdf-signature-line"></div>
-                <div class="pdf-label">Firma</div>
+                <!-- Área para mostrar firma virtual en el PDF -->
+                <div class="pdf-signature-area">
+                    <div class="pdf-signature-label">Firma del Declarante:</div>
+                    <div class="pdf-signature-box">
+                        <img id="previewSignatureImg" class="pdf-signature-img" style="display: none;">
+                        <div id="noSignatureText" style="color: #999; font-style: italic; padding: 20px;">
+                            [Área para firma]
+                        </div>
+                    </div>
+                </div>
                 
                 <div style="margin-top: 30px;">
                     <div class="pdf-footer-label">Apellidos y Nombres:</div>
@@ -143,6 +174,10 @@
     <script>
         // Variables globales
         let fingerprintImage = null;
+        let signatureImage = null;
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
         const meses = [
             "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
             "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -153,6 +188,9 @@
             // Configurar fecha actual por defecto
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('fecha').value = today;
+            
+            // Inicializar canvas para firma
+            inicializarCanvasFirma();
             
             // Configurar eventos para huella digital
             const fingerprintFile = document.getElementById('fingerprintFile');
@@ -190,6 +228,121 @@
             // Actualizar vista previa inicial
             actualizarVistaPrevia();
         });
+        
+        // Inicializar canvas para firma
+        function inicializarCanvasFirma() {
+            const canvas = document.getElementById('signatureCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Configurar canvas
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            // Eventos del mouse
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            });
+            
+            canvas.addEventListener('mousemove', dibujar);
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+            canvas.addEventListener('mouseout', () => isDrawing = false);
+            
+            // Eventos táctiles (para dispositivos móviles)
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                isDrawing = true;
+                [lastX, lastY] = [touch.clientX - rect.left, touch.clientY - rect.top];
+            });
+            
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                
+                if (isDrawing) {
+                    ctx.beginPath();
+                    ctx.moveTo(lastX, lastY);
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+                    [lastX, lastY] = [x, y];
+                }
+            });
+            
+            canvas.addEventListener('touchend', () => isDrawing = false);
+        }
+        
+        // Función para dibujar en el canvas
+        function dibujar(e) {
+            if (!isDrawing) return;
+            const canvas = document.getElementById('signatureCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+        
+        // Guardar firma
+        function guardarFirma() {
+            const canvas = document.getElementById('signatureCanvas');
+            
+            // Verificar si hay algo dibujado
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            let hasDrawing = false;
+            
+            for (let i = 3; i < imageData.data.length; i += 4) {
+                if (imageData.data[i] > 0) {
+                    hasDrawing = true;
+                    break;
+                }
+            }
+            
+            if (!hasDrawing) {
+                mostrarAlerta('Por favor, dibuje su firma primero', 'error');
+                return;
+            }
+            
+            // Convertir canvas a imagen
+            signatureImage = canvas.toDataURL('image/png');
+            
+            // Mostrar vista previa de la firma
+            const previewContainer = document.getElementById('signaturePreview');
+            const previewImg = document.getElementById('signatureImage');
+            
+            previewImg.src = signatureImage;
+            previewContainer.style.display = 'block';
+            
+            // Actualizar vista previa del documento
+            actualizarVistaPrevia();
+            
+            mostrarAlerta('Firma guardada correctamente', 'success');
+        }
+        
+        // Limpiar firma
+        function limpiarFirma() {
+            const canvas = document.getElementById('signatureCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Ocultar vista previa
+            document.getElementById('signaturePreview').style.display = 'none';
+            signatureImage = null;
+            
+            // Actualizar vista previa del documento
+            actualizarVistaPrevia();
+            
+            mostrarAlerta('Firma limpiada', 'success');
+        }
         
         // Manejar imagen de huella digital
         function handleFingerprintImage(file) {
@@ -308,6 +461,19 @@
                 fingerprintText.style.display = 'block';
             }
             
+            // Actualizar firma virtual
+            const signatureImg = document.getElementById('previewSignatureImg');
+            const noSignatureText = document.getElementById('noSignatureText');
+            
+            if (signatureImage) {
+                signatureImg.src = signatureImage;
+                signatureImg.style.display = 'block';
+                noSignatureText.style.display = 'none';
+            } else {
+                signatureImg.style.display = 'none';
+                noSignatureText.style.display = 'block';
+            }
+            
             mostrarAlerta('Vista previa actualizada', 'success');
         }
         
@@ -320,6 +486,12 @@
             if (!nombre || !dni) {
                 mostrarAlerta('Por favor, complete al menos el nombre y DNI', 'error');
                 return;
+            }
+            
+            if (!signatureImage) {
+                if (!confirm('No se ha guardado una firma. ¿Desea continuar sin firma?')) {
+                    return;
+                }
             }
             
             mostrarAlerta('Generando PDF... Esto puede tomar unos segundos.', 'success');
@@ -386,12 +558,18 @@
                 return;
             }
             
+            if (!signatureImage) {
+                if (!confirm('No se ha guardado una firma. ¿Desea imprimir sin firma?')) {
+                    return;
+                }
+            }
+            
             window.print();
         }
         
-        // Limpiar formulario
+        // Limpiar formulario completo
         function limpiarFormulario() {
-            if (confirm('¿Está seguro de limpiar todos los datos?')) {
+            if (confirm('¿Está seguro de limpiar todos los datos incluyendo firma y huella digital?')) {
                 document.getElementById('nombre').value = '';
                 document.getElementById('dni').value = '';
                 document.getElementById('domicilio').value = '';
@@ -403,10 +581,161 @@
                 document.getElementById('fingerprintPreview').style.display = 'none';
                 document.getElementById('fingerprintPreview').src = '';
                 
+                // Limpiar firma
+                limpiarFirma();
+                
                 actualizarVistaPrevia();
-                mostrarAlerta('Formulario limpiado', 'success');
+                mostrarAlerta('Formulario limpiado completamente', 'success');
             }
         }
     </script>
+
+    <style>
+        /* Estilos adicionales para la firma virtual */
+        .signature-section {
+            grid-column: span 2;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+        }
+        
+        .signature-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .signature-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .signature-buttons button {
+            padding: 5px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .btn-clear {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        
+        .btn-clear:hover {
+            background-color: #ff5252;
+        }
+        
+        .btn-save {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .btn-save:hover {
+            background-color: #45a049;
+        }
+        
+        .signature-container {
+            position: relative;
+            border: 2px dashed #ccc;
+            border-radius: 6px;
+            background-color: white;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        
+        #signatureCanvas {
+            display: block;
+            width: 100%;
+            height: 150px;
+            cursor: crosshair;
+            background-color: white;
+        }
+        
+        .signature-instructions {
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            pointer-events: none;
+        }
+        
+        .signature-preview-container {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px;
+            background-color: white;
+            margin-top: 10px;
+        }
+        
+        .signature-preview-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .signature-preview-img {
+            max-width: 100%;
+            max-height: 80px;
+            border: 1px solid #eee;
+        }
+        
+        /* Estilos para la firma en el PDF */
+        .pdf-signature-area {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .pdf-signature-label {
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .pdf-signature-box {
+            border: 1px solid #999;
+            border-radius: 4px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f8f8;
+        }
+        
+        .pdf-signature-img {
+            max-width: 90%;
+            max-height: 70px;
+        }
+        
+        /* Estilos para los campos llenados */
+        .pdf-field.filled, .pdf-footer-field.filled {
+            font-weight: bold;
+            color: #000;
+            text-decoration: underline;
+        }
+        
+        /* Ajustes responsivos */
+        @media (max-width: 768px) {
+            .signature-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .signature-buttons {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
 </body>
 </html>
