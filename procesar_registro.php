@@ -222,7 +222,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow flex items-center gap-2 cursor-pointer">
                             <i class="fas fa-print"></i> Imprimir Constancia
                         </button>
-                        <a href="index.php" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded shadow flex items-center gap-2 cursor-pointer">
+                        <a href="../index.html" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded shadow flex items-center gap-2 cursor-pointer">
                             <i class="fas fa-home"></i> Finalizar
                         </a>
                     </div>
