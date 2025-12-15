@@ -1,467 +1,361 @@
-
-/* Unified CSS for Health Declaration Forms */
-/* Combines best elements from DeclaSalud.css and DeclaSaludM.css */
-
-* {
-    box-sizing: border-box;
-    font-family: 'Roboto', sans-serif;
-}
-
-body {
-    background-color: #f3f4f6;
-    margin: 0;
-    padding: 20px;
-    color: #333;
-    line-height: 1.6;
-}
-
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    background-color: white;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.header {
-    background-color: #16a34a;
-    color: white;
-    padding: 20px;
-    text-align: center;
-}
-
-.header h1 {
-    margin: 0 0 10px 0;
-    font-size: 24px;
-}
-
-.header .subtitle, .header h2 {
-    font-size: 16px;
-    font-weight: normal;
-    margin-bottom: 5px;
-}
-
-.header-line {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 14px;
-}
-
-.institution-name {
-    text-align: center;
-    font-weight: bold;
-    margin: 15px 0;
-    color: #16a34a;
-    font-size: 18px;
-}
-
-.form-section {
-    padding: 20px 30px;
-    border-bottom: 1px solid #eee;
-}
-
-.section-title {
-    color: #16a34a;
-    border-bottom: 2px solid #16a34a;
-    padding-bottom: 8px;
-    margin-bottom: 20px;
-    font-size: 18px;
-}
-
-.form-row {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    flex: 1;
-    min-width: 250px;
-    margin-right: 20px;
-    margin-bottom: 15px;
-}
-
-.form-group:last-child {
-    margin-right: 0;
-}
-
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #444;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: #16a34a;
-    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
-}
-
-.declaration-section {
-    padding: 20px 30px;
-    border-bottom: 1px solid #eee;
-}
-
-.declaration-item {
-    margin-bottom: 20px;
-}
-
-.declaration-text {
-    background-color: #f9f9f9;
-    padding: 15px;
-    border-left: 4px solid #16a34a;
-    margin: 20px 0;
-    font-size: 15px;
-}
-
-.checkbox-group {
-    background-color: #f9f9f9;
-    padding: 15px;
-    border-radius: 4px;
-    border-left: 4px solid #16a34a;
-    margin-bottom: 20px;
-}
-
-.checkbox-item {
-    margin: 15px 0;
-    display: flex;
-    align-items: flex-start;
-}
-
-.checkbox-item input {
-    width: auto;
-    margin-right: 10px;
-    margin-top: 5px;
-}
-
-.checkbox-item label {
-    display: inline-block;
-    font-weight: normal;
-}
-
-.warning-box {
-    background-color: #fff3cd;
-    border: 1px solid #ffeaa7;
-    color: #856404;
-    padding: 15px;
-    border-radius: 4px;
-    margin: 20px 0;
-    font-size: 14px;
-}
-
-.signature-section {
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-top: 1px solid #ddd;
-    margin-top: 20px;
-}
-
-.signature-box {
-    border: 1px dashed #aaa;
-    height: 100px;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: white;
-    position: relative;
-    cursor: crosshair;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #777;
-    font-style: italic;
-}
-
-.signature-box canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    cursor: crosshair;
-}
-
-.signature-placeholder {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #aaa;
-    font-style: italic;
-    pointer-events: none;
-}
-
-.date-inputs {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.date-inputs input {
-    flex: 0 0 auto;
-}
-
-.date-inputs label {
-    margin: 0;
-    white-space: nowrap;
-}
-
-.page-break {
-    padding: 20px 30px;
-    border-bottom: 1px solid #eee;
-    page-break-before: always;
-    margin-top: 40px;
-    padding-top: 30px;
-    border-top: 1px solid #ccc;
-}
-
-.fingerprint-section {
-    margin-top: 30px;
-    text-align: center;
-}
-
-.fingerprint-box {
-    display: inline-block;
-    width: 200px;
-    height: 150px;
-    border: 2px solid #ddd;
-    border-radius: 4px;
-    margin-top: 10px;
-    background-color: #fdfdfd;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.fingerprint-box:hover {
-    border-color: #16a34a;
-    background-color: #f0f9f0;
-}
-
-.fingerprint-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    background-color: white;
-}
-
-.fingerprint-placeholder {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #aaa;
-    font-style: italic;
-    text-align: center;
-    width: 100%;
-    padding: 10px;
-}
-
-.fingerprint-label {
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
-    text-align: center;
-    font-size: 14px;
-    color: #777;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 3px 0;
-}
-
-.upload-controls {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 15px;
-    flex-wrap: wrap;
-}
-
-.upload-btn, .remove-btn {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s;
-}
-
-.upload-btn {
-    background-color: #16a34a;
-    color: white;
-}
-
-.upload-btn:hover {
-    background-color: #15803d;
-}
-
-.remove-btn {
-    background-color: #dc3545;
-    color: white;
-}
-
-.remove-btn:hover {
-    background-color: #c82333;
-}
-
-.upload-instructions {
-    margin-top: 15px;
-    font-size: 14px;
-    color: #666;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.button-group {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-top: 1px solid #ddd;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.btn, button {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s;
-    flex: 1;
-    min-width: 180px;
-}
-
-.btn-secondary, .btn-secondary {
-    background-color: #e9ecef;
-    color: #495057;
-}
-
-.btn-secondary:hover {
-    background-color: #dee2e6;
-}
-
-.btn-danger, .btn-danger {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-}
-
-.btn-primary, .btn-primary {
-    background-color: #16a34a;
-    color: white;
-}
-
-.btn-primary:hover {
-    background-color: #15803d;
-}
-
-.btn-success, .btn-success {
-    background-color: #16a34a;
-    color: white;
-}
-
-.btn-success:hover {
-    background-color: #15803d;
-}
-
-.footnote {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #ddd;
-    font-size: 14px;
-    color: #666;
-}
-
-.required {
-    color: #e74c3c;
-}
-
-.file-input {
-    display: none;
-}
-
-/* Print styles */
-@media print {
-    body {
-        background-color: white !important;
-        padding: 0 !important;
-    }
-
-    .container {
-        box-shadow: none !important;
-    }
-
-    .button-group, .btn, .upload-controls, .upload-btn, .remove-btn {
-        display: none !important;
-    }
-
-    .checkbox-item input {
-        transform: scale(1.2);
-    }
-
-    .fingerprint-box {
-        border: 1px solid #000 !important;
-    }
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-    .container {
-        margin: 10px;
-    }
-
-    .form-group {
-        min-width: 100%;
-        margin-right: 0;
-    }
-
-    .form-section, .declaration-section, .page-break {
-        padding: 15px;
-    }
-
-    .button-group {
-        flex-direction: column;
-    }
-
-    .btn, button {
-        width: 100%;
-        margin-bottom: 10px;
-        min-width: auto;
-    }
-
-    .date-inputs {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .date-inputs label {
-        margin-bottom: 5px;
-    }
-
-    .upload-controls {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .header-line {
-        flex-direction: column;
-        gap: 5px;
-    }
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f9f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #2e8b57;
+        }
+
+        h1 {
+            color: #2e8b57;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: #3cb371;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .forms-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(46, 139, 87, 0.15);
+            padding: 25px;
+            border-top: 6px solid #2e8b57;
+        }
+
+        .form-section h2 {
+            color: #2e8b57;
+            font-size: 22px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0f0e9;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2e8b57;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #c1e1d2;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #2e8b57;
+            box-shadow: 0 0 0 2px rgba(46, 139, 87, 0.2);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group input {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            accent-color: #2e8b57;
+        }
+
+        .signature-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed #c1e1d2;
+        }
+
+        .signature-container {
+            border: 1px solid #c1e1d2;
+            border-radius: 4px;
+            height: 150px;
+            margin-bottom: 15px;
+            background-color: #f9fdfa;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signature-canvas {
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        .signature-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: #2e8b57;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #26734a;
+        }
+
+        .btn-secondary {
+            background-color: #3cb371;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #2e8b57;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #2e8b57;
+            border: 1px solid #2e8b57;
+        }
+
+        .btn-outline:hover {
+            background-color: #f0f9f4;
+        }
+
+        .btn-pdf {
+            background-color: #d9534f;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        .btn-pdf:hover {
+            background-color: #c9302c;
+        }
+
+        .fingerprint-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed #c1e1d2;
+        }
+
+        .fingerprint-container {
+            border: 1px solid #c1e1d2;
+            border-radius: 4px;
+            height: 150px;
+            margin-bottom: 15px;
+            background-color: #f9fdfa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fingerprint-preview {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+        }
+
+        .fingerprint-placeholder {
+            text-align: center;
+            color: #7bb992;
+        }
+
+        .fingerprint-placeholder i {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .legal-text {
+            background-color: #f0f9f4;
+            padding: 15px;
+            border-left: 4px solid #2e8b57;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #c1e1d2;
+            color: #7bb992;
+            font-size: 14px;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #c1e1d2;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #7bb992;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            color: #2e8b57;
+            border-bottom: 3px solid #2e8b57;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .required::after {
+            content: " *";
+            color: #d9534f;
+        }
+
+        .declaration-text {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9fdfa;
+            border-radius: 4px;
+            border-left: 4px solid #3cb371;
+        }
+
+        .pdf-preview {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .pdf-preview-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-preview {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: #d9534f;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .progress-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .progress-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            width: 300px;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #2e8b57;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .forms-container {
+                flex-direction: column;
+            }
+            
+            .form-section {
+                min-width: 100%;
+            }
+            
+            .signature-actions {
+                flex-wrap: wrap;
+            }
+        }
