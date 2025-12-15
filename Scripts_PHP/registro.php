@@ -238,11 +238,16 @@
                             <input type="file" name="archivo_voucher" accept=".pdf, .jpg, .png"
                                 class="block w-full text-sm text-gray-500" required>
                         </div>
+                        <div class="border-b pb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Certificado de Estudios *</label>
+                            <input type="file" name="archivo_certificado" accept=".pdf, .jpg, .png"
+                                class="block w-full text-sm text-gray-500" required>
+                        </div>
                         <div class="bg-gray-50 p-4 rounded border border-gray-200">
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Soli Direc. (Firmada)
                                     *</label>
-                                <input type="file" name="archivo_dj_salud" accept=".pdf, .jpg" class="w-full" required>
+                                <input type="file" name="archivo_soli_direc" accept=".pdf, .jpg" class="w-full" required>
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">DJ de Salud (Firmada)

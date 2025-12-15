@@ -90,6 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $archivo_dj_salud_blob = file_get_contents($_FILES['archivo_dj_salud']['tmp_name']);
         $archivo_dj_dinero_blob = file_get_contents($_FILES['archivo_dj_dinero']['tmp_name']);
+        $archivo_dj_Certificado_blob = file_get_contents($_FILES['archivo_certificado']['tmp_name']);
 
         // Variable NULL auxiliar para bind_param
         $null = null;
@@ -101,24 +102,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             No_devolucion_de_dinero_Menor_de_edad, 
             Declaracion_jurada_de_Salud_Menor_de__edad, 
             No_devolucion_de_dinero_Mayor_de_edad, 
-            Declaracion_Jurada_de_salud_Mayor_de_edad, 
+            Declaracion_Jurada_de_salud_Mayor_de_edad,
+            Certificado_Estudiante, 
             estudiante_DNI
-        ) VALUES (?, ?, ?, ?, ?)";
+        ) VALUES (?, ?, ?, ?, ?, ?)";
 
         $stmt_docs = $conn->prepare($sql_docs);
 
         if ($es_menor) {
             // MENOR: Llenamos las 2 primeras columnas (Menor), las otras 2 (Mayor) van NULL
-            $stmt_docs->bind_param("bbbbi", $null, $null, $null, $null, $dni);
+            $stmt_docs->bind_param("bbbbbi", $null,$null, $null, $null, $null, $dni);
             // Enviamos los datos pesados (BLOB)
-            $stmt_docs->send_long_data(0, $archivo_dj_dinero_blob); // No devolucion Menor
+            $stmt_docs->send_long_data(0, $archivo_dj_dinero_blob);     // No devolucion Menor
             $stmt_docs->send_long_data(1, $archivo_dj_salud_blob);  // Salud Menor
+            $stmt_docs->send_long_data(4, $archivo_dj_Certificado_blob);  
         } else {
             // MAYOR: Las 2 primeras columnas (Menor) van NULL, llenamos las otras 2 (Mayor)
-            $stmt_docs->bind_param("bbbbi", $null, $null, $null, $null, $dni);
+            $stmt_docs->bind_param("bbbbbi", $null, $null,$null, $null, $null, $dni);
             // Enviamos los datos pesados (BLOB)
             $stmt_docs->send_long_data(2, $archivo_dj_dinero_blob); // No devolucion Mayor
             $stmt_docs->send_long_data(3, $archivo_dj_salud_blob);  // Salud Mayor
+            $stmt_docs->send_long_data(4, $archivo_dj_Certificado_blob);
         }
 
         $stmt_docs->execute();
@@ -247,7 +251,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 } else {
     // Si intentan entrar directo sin POST
-    header("Location: registro.html");
+    header("Location: registro.php");
     exit();
 }
 ?>

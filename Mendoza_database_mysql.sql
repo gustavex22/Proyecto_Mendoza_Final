@@ -24,6 +24,7 @@ CREATE TABLE Documentos(
     Declaracion_jurada_de_Salud_Menor_de__edad LONGBLOB,
     No_devolucion_de_dinero_Mayor_de_edad LONGBLOB,
     Declaracion_Jurada_de_salud_Mayor_de_edad LONGBLOB,
+    Certificado_Estudiante LONGBLOB,
     estudiante_DNI INT UNIQUE,
     FOREIGN KEY (estudiante_DNI) REFERENCES Estudiante(DNI)
 );

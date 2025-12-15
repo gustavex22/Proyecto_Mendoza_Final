@@ -1,973 +1,591 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Solicitud de Inscripción y Acta de Compromiso</title>
-    <!-- Agregar jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/aajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link rel="stylesheet" href="CSS\RenJurada.css">
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="CSS/Solidirect.css">
+
 </head>
+
 <body>
     <div class="container">
-        <!-- PRIMER DOCUMENTO: SOLICITUD DE INSCRIPCIÓN -->
-        <div class="document-container">
-            <div class="header">
+        <!-- SOLICITUD DE INSCRIPCIÓN -->
+        <section class="document-container">
+            <header class="header">
                 <div class="header-line">
-                    <div>IESTP María Rosario Araoz Pinto</div>
-                    <div>Ministerio de Educación</div>
+                    <span>IESTP María Rosario Araoz Pinto</span>
+                    <span>Ministerio de Educación</span>
+                </div>
+                <h1>SOLICITUD DE INSCRIPCIÓN</h1>
+                <h2>Y ACTA DE COMPROMISO</h2>
+            </header>
+
+            <div class="carta-content">
+                <div class="document-title">
+                    <strong>Instituto de Educación Superior Tecnológico Público<br>
+                        María Rosario Araoz Pinto</strong>
                 </div>
 
-                <div class="institution-name">
-                    INSTITUTO DE EDUCACIÓN SUPERIOR TECNOLÓGICO PÚBLICO<br>
-                    MARÍA ROSARIO ARAOZ PINTO
+                <div class="destinatario">
+                    <strong>SR. DIRECTOR DEL IESTP. "MARIA ROSARIO ARAOZ PINTO"</strong>
                 </div>
 
-                <h1 class="main-title">SOLICITUD DE INSCRIPCIÓN</h1>
-                <h2 class="subtitle">Y ACTA DE COMPROMISO</h2>
+                <form id="solicitudForm">
+                    <div class="field-row">
+                        <label>APELLIDO PATERNO</label>
+                        <input type="text" id="apellidoPaterno" required class="inline-field">
+                        <label>APELLIDO MATERNO</label>
+                        <input type="text" id="apellidoMaterno" class="inline-field">
+                    </div>
+
+                    <div class="field-row">
+                        <label>NOMBRES</label>
+                        <input type="text" id="nombresSolicitud" required>
+                    </div>
+
+                    <div class="field-row">
+                        <label>DOCUMENTO DE IDENTIDAD</label>
+                        <input type="text" id="dniSolicitud" maxlength="8" required pattern="[0-9]{8}"
+                            class="inline-field">
+                        <label>DOMICILIO ACTUAL</label>
+                        <input type="text" id="domicilioSolicitud" required>
+                    </div>
+
+                    <div class="text-block">
+                        <strong>ANTE UD., ME PRESENTO Y EXPONGO:</strong>
+                    </div>
+
+                    <div class="text-block">
+                        Declaro cumplir con los requisitos establecidos en el Reglamento de
+                        Admisión, para mi postulación.<br>
+                        Que acato en todos sus términos el Reglamento de Admisión.
+                    </div>
+
+                    <div class="text-block">
+                        Por tanto solicito a Ud., señor Director, se sirva disponer mi inscripción como
+                        postulante a la Especialidad de:
+                    </div>
+
+                    <div class="field-row">
+                        <label>Especialidad</label>
+                        <input type="text" id="especialidad" required>
+                    </div>
+
+                    <div class="field-row">
+                        <label>Turno</label>
+                        <input type="text" id="turno" placeholder="......" required style="width: 150px;">
+                        <label style="min-width: 120px;">Modalidad</label>
+                        <input type="text" id="modalidad" placeholder="......" required style="width: 150px;">
+                    </div>
+
+                    <div class="text-block">
+                        Adjunto a la presente los documentos solicitados por el Reglamento de ADMISIÓN
+                        <input type="text" id="anioReglamento" placeholder="20......"
+                            style="width: 80px; display: inline-block; margin: 0 5px;">
+                    </div>
+
+                    <div class="fecha-lugar">
+                        San Miguel,
+                        <input type="text" id="dia" placeholder="......"
+                            style="width: 50px; display: inline-block; margin: 0 5px;">
+                        de
+                        <input type="text" id="mes" placeholder="......"
+                            style="width: 80px; display: inline-block; margin: 0 5px;">
+                        del
+                        <input type="text" id="anio" placeholder="20......"
+                            style="width: 80px; display: inline-block; margin: 0 5px;">
+                    </div>
+
+                    <div class="signature-section">
+                        <p class="firma-label">FIRMA DEL POSTULANTE</p>
+                        <div class="signature-box" id="signatureBox1">
+                            <canvas id="signatureCanvas1"></canvas>
+                            <span class="signature-placeholder" id="ph1">Firme aquí con el mouse o touch</span>
+                        </div>
+                        <small style="color: #64748b; display: block; margin-top: 5px;">
+                            Haga clic y arrastre para firmar
+                        </small>
+                    </div>
+                </form>
             </div>
-            
-            <form id="solicitudForm">
-                <div class="director-section">
-                    <div class="director-title">SR. DIRECTOR DEL IESTP. "MARIA ROSARIO ARAOZ PINTO"</div>
-                    
-                    <div class="column-layout">
-                        <div class="column">
-                            <div class="field-group">
-                                <label class="field-label">APELLIDO PATERNO</label>
-                                <input type="text" class="field-input" id="apellidoPaterno" placeholder="Ingrese apellido paterno">
-                            </div>
-                            
-                            <div class="field-group">
-                                <label class="field-label">APELLIDO MATERNO</label>
-                                <input type="text" class="field-input" id="apellidoMaterno" placeholder="Ingrese apellido materno">
-                            </div>
-                        </div>
-                        
-                        <div class="column">
-                            <div class="field-group">
-                                <label class="field-label">NOMBRES</label>
-                                <input type="text" class="field-input" id="nombresSolicitud" placeholder="Ingrese nombres completos">
-                            </div>
-                            
-                            <div class="field-group">
-                                <label class="field-label">DOCUMENTO DE IDENTIDAD</label>
-                                <input type="text" class="field-input" id="dniSolicitud" placeholder="Número de documento">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="field-group">
-                        <label class="field-label">DOMICILIO ACTUAL</label>
-                        <input type="text" class="field-input" id="domicilioSolicitud" placeholder="Ingrese dirección completa">
-                    </div>
-                </div>
-                
-                <div class="text-block text-content">
-                    <p><strong>ANTE UD., ME PRESENTO Y EXPONGO:</strong></p>
-                    <p>Declaro cumplir con los requisitos establecidos en el Reglamento de Admisión, para mi postulación.</p>
-                    <p>Que acato en todos sus términos el Reglamento de Admisión.</p>
-                    <p>Por tanto solicito a Ud., señor Director, se sirva disponer mi inscripción como postulante a la Especialidad de:</p>
-                </div>
-                
-                <div class="specialty-section">
-                    <div class="field-group">
-                        <label class="field-label">Especialidad</label>
-                        <input type="text" class="field-input" id="especialidad" placeholder="Ingrese nombre de la especialidad">
-                    </div>
-                    
-                    <div class="inline-group">
-                        <span class="inline-label">Turno</span>
-                        <select class="field-input" id="turno" style="width: 150px;">
-                            <option value="">Seleccione</option>
-                            <option value="Mañana">Mañana</option>
-                            <option value="Tarde">Tarde</option>
-                            <option value="Noche">Noche</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="modalidad-section">
-                    <div class="modalidad-line">
-                        <span class="inline-label">en la Modalidad de</span>
-                        <div class="modalidad-input-container">
-                            <input type="text" class="field-input" id="modalidad" placeholder="Ingrese modalidad">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="text-block text-content">
-                    <p>Adjunto a la presente los documentos solicitados por el Reglamento de ADMISIÓN 20
-                    <input type="text" class="field-input" id="anioReglamento2" value="24" style="width: 50px; display: inline; text-align: center;">
-                    ____</p>
-                </div>
-                
-                <!-- FIRMA DIGITAL PARA LA SOLICITUD -->
-                <div class="signature-section">
-                    <label class="field-label">Firma del Postulante:</label>
-                    <div class="signature-box" id="signatureBox1">
-                        <canvas id="signatureCanvas1" width="600" height="100"></canvas>
-                        <span id="signaturePlaceholder1">Firme aquí con el mouse o dedo</span>
-                    </div>
-                </div>
-                
-                <div class="form-section">
-                    <div class="inline-group">
-                        <span class="inline-label">San Miguel,</span>
-                        <div class="date-inputs">
-                            <input type="text" class="field-input" id="diaSolicitud" placeholder="Día" style="width: 60px;">
-                            <span>de</span>
-                            <input type="text" class="field-input" id="mesSolicitud" placeholder="Mes" style="width: 120px;">
-                            <span>del 20</span>
-                            <input type="text" class="field-input" id="anioSolicitud" value="24" style="width: 50px;">
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        
-        <div class="separator"></div>
-        
-        <!-- SEGUNDO DOCUMENTO: ACTA DE COMPROMISO -->
-        <div class="document-container">
-            <div class="header">
-                <div class="header-line">
-                    <div>IESTP María Rosario Araoz Pinto</div>
-                    <div>Ministerio de Educación</div>
+        </section>
+
+        <!-- ACTA DE COMPROMISO -->
+        <section class="document-container">
+            <header class="header">
+                <h1>ACTA DE COMPROMISO</h1>
+            </header>
+
+            <div class="carta-content">
+                <div class="document-title">
+                    <strong>Instituto de Educación Superior Tecnológico Público<br>
+                        María Rosario Araoz Pinto</strong>
                 </div>
 
-                <div class="institution-name">
-                    INSTITUTO DE EDUCACIÓN SUPERIOR TECNOLÓGICO PÚBLICO<br>
-                    MARÍA ROSARIO ARAOZ PINTO
-                </div>
+                <form id="actaForm">
+                    <div class="formatted-text">
+                        Yo, <input type="text" id="nombreActa" required
+                            style="width: 300px; display: inline-block; margin: 0 5px;">
+                        identificado con D.N.I. N°
+                        <input type="text" id="dniActa" maxlength="8" required pattern="[0-9]{8}"
+                            style="width: 120px; display: inline-block; margin: 0 5px;">
+                        domiciliado en la Av., Jr., Calle N°
+                        <input type="text" id="calleActa" required
+                            style="width: 200px; display: inline-block; margin: 0 5px;">
+                        <input type="text" id="distritoActa" placeholder="Distrito......" required
+                            style="width: 150px; display: inline-block; margin: 0 5px;">
+                    </div>
 
-                <h1 class="main-title">ACTA DE COMPROMISO</h1>
+                    <div class="text-block">
+                        mediante la presente Acta me comprometo completar mi CARPETA DE POSTULANTE de acuerdo a los
+                        requisitos solicitados por el REGLAMENTO DE ADMISIÓN
+                        <input type="text" id="anioReglamentoActa" placeholder="20......"
+                            style="width: 80px; display: inline-block; margin: 0 5px;">
+                        del IESTP "MARIA ROSARIO ARAOZ PINTO", dentro de 72 horas, después de haber sido publicado el
+                        cuadro de méritos correspondientes. De no cumplir con este requisito perderé la vacante obtenida
+                        en el concurso de admisión sin lugar a reclamos. Para dar fe a dicho compromiso, suscribo la
+                        presente Acta.
+                    </div>
+
+                    <div class="fecha-lugar">
+                        San Miguel,
+                        <input type="text" id="diaActa" placeholder="......"
+                            style="width: 50px; display: inline-block; margin: 0 5px;">
+                        de
+                        <input type="text" id="mesActa" placeholder="......"
+                            style="width: 80px; display: inline-block; margin: 0 5px;">
+                        del
+                        <input type="text" id="anioActa" placeholder="20......"
+                            style="width: 80px; display: inline-block; margin: 0 5px;">
+                    </div>
+
+                    <div
+                        style="margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <p style="font-weight: bold; margin-bottom: 10px;">Huella Digital</p>
+                            <p style="margin-top: 60px;">Índice derecho</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <p style="font-weight: bold; margin-bottom: 10px;">Firma</p>
+                            <div class="signature-box" id="signatureBox2" style="width: 250px; height: 100px;">
+                                <canvas id="signatureCanvas2"></canvas>
+                                <span class="signature-placeholder" id="ph2">Firme aquí</span>
+                            </div>
+                            <p style="margin-top: 10px;">DNI. N°
+                                <input type="text" id="dniFirma" placeholder="......"
+                                    style="width: 120px; display: inline-block; margin-left: 5px;">
+                            </p>
+                        </div>
+                    </div>
+                </form>
             </div>
-            
-            <div class="document-title">ACTA DE COMPROMISO</div>
-            
-            <form id="actaForm">
-                <div class="form-section">
-                    <div class="inline-group">
-                        <span class="inline-label">Yo,</span>
-                        <div style="flex: 1; min-width: 200px;">
-                            <input type="text" class="field-input" id="nombreActa" placeholder="Ingrese su nombre completo">
-                        </div>
-                    </div>
-                    
-                    <div class="inline-group">
-                        <span class="inline-label">identificado con D.N.I. N°</span>
-                        <div style="width: 150px;">
-                            <input type="text" class="field-input" id="dniActa" placeholder="Número de DNI">
-                        </div>
-                    </div>
-                    
-                    <div class="inline-group">
-                        <span class="inline-label">domiciliado en la Av., Jr., Calle N°</span>
-                        <div style="width: 120px;">
-                            <input type="text" class="field-input" id="calleActa" placeholder="Número de calle">
-                        </div>
-                        <span class="inline-label">Distrito</span>
-                        <div style="flex: 1; min-width: 200px;">
-                            <input type="text" class="field-input" id="distritoActa" placeholder="Nombre del distrito">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="text-block text-content">
-                    <p>mediante la presente Acta me comprometo completar mi CARPETA DE POSTULANTE de acuerdo a los requisitos solicitados por el REGLAMENTO DE ADMISIÓN 20 
-                    <input type="text" class="field-input" id="anioReglamento" value="24" style="width: 50px; display: inline; text-align: center;">
-                    del IESTP "MARIA ROSARIO ARAOZ PINTO", dentro de 72 horas, después de haber sido publicado el cuadro de méritos correspondientes. De no cumplir con este requisito perderé la vacante obtenida en el concurso de admisión sin lugar a reclamos. Para dar fe a dicho compromiso, suscribo la presente Acta.</p>
-                </div>
-                
-                <div class="form-section">
-                    <div class="inline-group">
-                        <span class="inline-label">San Miguel,</span>
-                        <div class="date-inputs">
-                            <input type="text" class="field-input" id="diaActa" placeholder="Día" style="width: 60px;">
-                            <span>de</span>
-                            <input type="text" class="field-input" id="mesActa" placeholder="Mes" style="width: 120px;">
-                            <span>del 20</span>
-                            <input type="text" class="field-input" id="anioActa" value="24" style="width: 50px;">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- FIRMA DIGITAL PARA EL ACTA -->
-                <div class="signature-section">
-                    <div class="fingerprint-area">
-                        <div class="fingerprint-box">
-                            <div class="fingerprint-label">Huella Digital</div>
-                        </div>
-                    </div>
-                    
-                    <div class="field-group">
-                        <label class="field-label">Firma:</label>
-                        <div class="signature-box" id="signatureBox2">
-                            <canvas id="signatureCanvas2" width="600" height="100"></canvas>
-                            <span id="signaturePlaceholder2">Firme aquí con el mouse o dedo</span>
-                        </div>
-                    </div>
-                    
-                    <div class="inline-group">
-                        <span class="inline-label">Firma</span>
-                        <div class="signature-line" style="flex: 1;"></div>
-                        <span class="inline-label">DNI. N°</span>
-                        <div style="width: 150px;">
-                            <input type="text" class="field-input" id="dniFirmaActa" placeholder="Número de DNI">
-                        </div>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 10px;">
-                        <div class="fingerprint-label">Índice derecho</div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        
+        </section>
+
+        <!-- BOTONES -->
         <div class="button-group">
-            <button class="btn-secondary" onclick="autoCompletarDatos()">Auto-completar Datos</button>
-            <button class="btn-danger" onclick="limpiarFirmas()">Limpiar Firmas</button>
-            <button class="btn-primary" onclick="imprimirDocumentos()">Imprimir Documentos</button>
-            <button class="btn-pdf" onclick="descargarPDF()">Descargar PDF</button>
-            <button class="btn-primary" onclick="validarYEnviar()">Enviar Solicitudes</button>
-        </div>
-        
-        <div class="footer-note">
-            <p><strong>Nota:</strong> Complete todos los campos requeridos en ambos documentos. Use el área de firma para firmar digitalmente con el mouse o dedo.</p>
+            <button id="limpiarBtn">Limpiar firmas</button>
+            <button id="generarPdfBtn">Descargar PDF</button>
         </div>
     </div>
 
     <script>
-        // Cargar jsPDF
+        // Acceso a jsPDF
         const { jsPDF } = window.jspdf;
-        
-        // Variables para las dos firmas digitales
-        let signatureCanvas1, signatureCanvas2;
+
+        // Variables globales
+        let isDrawing1 = false;
+        let isDrawing2 = false;
         let ctx1, ctx2;
-        let isDrawing1 = false, isDrawing2 = false;
-        let lastX1 = 0, lastY1 = 0, lastX2 = 0, lastY2 = 0;
-        
-        // Inicializar las firmas digitales
-        function inicializarFirmas() {
-            // Configurar primera firma (Solicitud)
-            signatureCanvas1 = document.getElementById('signatureCanvas1');
-            ctx1 = signatureCanvas1.getContext('2d');
-            const signatureBox1 = document.getElementById('signatureBox1');
-            
-            signatureCanvas1.width = signatureBox1.offsetWidth;
-            signatureCanvas1.height = signatureBox1.offsetHeight;
+
+        // Inicializar canvas
+        function initCanvas() {
+            const canvas1 = document.getElementById('signatureCanvas1');
+            const canvas2 = document.getElementById('signatureCanvas2');
+
+            // Ajustar tamaño del canvas
+            canvas1.width = canvas1.parentElement.clientWidth;
+            canvas1.height = canvas1.parentElement.clientHeight;
+
+            canvas2.width = canvas2.parentElement.clientWidth;
+            canvas2.height = canvas2.parentElement.clientHeight;
+
+            // Obtener contextos
+            ctx1 = canvas1.getContext('2d');
+            ctx2 = canvas2.getContext('2d');
+
+            // Configurar estilo de dibujo
+            ctx1.strokeStyle = '#0f766e';
             ctx1.lineWidth = 2;
-            ctx1.lineJoin = 'round';
             ctx1.lineCap = 'round';
-            ctx1.strokeStyle = '#2c3e50';
-            
-            // Configurar segunda firma (Acta)
-            signatureCanvas2 = document.getElementById('signatureCanvas2');
-            ctx2 = signatureCanvas2.getContext('2d');
-            const signatureBox2 = document.getElementById('signatureBox2');
-            
-            signatureCanvas2.width = signatureBox2.offsetWidth;
-            signatureCanvas2.height = signatureBox2.offsetHeight;
+            ctx1.lineJoin = 'round';
+
+            ctx2.strokeStyle = '#0f766e';
             ctx2.lineWidth = 2;
-            ctx2.lineJoin = 'round';
             ctx2.lineCap = 'round';
-            ctx2.strokeStyle = '#2c3e50';
-            
-            // Eventos para la primera firma
-            signatureCanvas1.addEventListener('mousedown', startDrawing1);
-            signatureCanvas1.addEventListener('touchstart', startDrawingTouch1);
-            signatureCanvas1.addEventListener('mousemove', draw1);
-            signatureCanvas1.addEventListener('touchmove', drawTouch1);
-            signatureCanvas1.addEventListener('mouseup', stopDrawing1);
-            signatureCanvas1.addEventListener('touchend', stopDrawing1);
-            signatureCanvas1.addEventListener('mouseout', stopDrawing1);
-            
-            // Eventos para la segunda firma
-            signatureCanvas2.addEventListener('mousedown', startDrawing2);
-            signatureCanvas2.addEventListener('touchstart', startDrawingTouch2);
-            signatureCanvas2.addEventListener('mousemove', draw2);
-            signatureCanvas2.addEventListener('touchmove', drawTouch2);
-            signatureCanvas2.addEventListener('mouseup', stopDrawing2);
-            signatureCanvas2.addEventListener('touchend', stopDrawing2);
-            signatureCanvas2.addEventListener('mouseout', stopDrawing2);
+            ctx2.lineJoin = 'round';
+
+            // Configurar eventos para el primer canvas
+            canvas1.addEventListener('mousedown', startDrawing1);
+            canvas1.addEventListener('mousemove', draw1);
+            canvas1.addEventListener('mouseup', stopDrawing1);
+            canvas1.addEventListener('mouseout', stopDrawing1);
+
+            // Eventos táctiles para móviles
+            canvas1.addEventListener('touchstart', handleTouchStart1);
+            canvas1.addEventListener('touchmove', handleTouchMove1);
+            canvas1.addEventListener('touchend', stopDrawing1);
+
+            // Configurar eventos para el segundo canvas
+            canvas2.addEventListener('mousedown', startDrawing2);
+            canvas2.addEventListener('mousemove', draw2);
+            canvas2.addEventListener('mouseup', stopDrawing2);
+            canvas2.addEventListener('mouseout', stopDrawing2);
+
+            // Eventos táctiles para móviles
+            canvas2.addEventListener('touchstart', handleTouchStart2);
+            canvas2.addEventListener('touchmove', handleTouchMove2);
+            canvas2.addEventListener('touchend', stopDrawing2);
         }
-        
-        // Funciones para la primera firma
+
+        // Funciones para el primer canvas
         function startDrawing1(e) {
             isDrawing1 = true;
-            [lastX1, lastY1] = [e.offsetX, e.offsetY];
-            document.getElementById('signaturePlaceholder1').style.display = 'none';
+            document.getElementById('ph1').classList.add('hidden');
+            draw1(e);
         }
-        
-        function startDrawingTouch1(e) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const rect = signatureCanvas1.getBoundingClientRect();
-            isDrawing1 = true;
-            [lastX1, lastY1] = [touch.clientX - rect.left, touch.clientY - rect.top];
-            document.getElementById('signaturePlaceholder1').style.display = 'none';
-        }
-        
+
         function draw1(e) {
             if (!isDrawing1) return;
+
             e.preventDefault();
-            
-            ctx1.beginPath();
-            ctx1.moveTo(lastX1, lastY1);
-            ctx1.lineTo(e.offsetX, e.offsetY);
-            ctx1.stroke();
-            
-            [lastX1, lastY1] = [e.offsetX, e.offsetY];
-        }
-        
-        function drawTouch1(e) {
-            if (!isDrawing1) return;
-            e.preventDefault();
-            
-            const touch = e.touches[0];
-            const rect = signatureCanvas1.getBoundingClientRect();
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-            
-            ctx1.beginPath();
-            ctx1.moveTo(lastX1, lastY1);
+            const canvas = document.getElementById('signatureCanvas1');
+            const rect = canvas.getBoundingClientRect();
+
+            let x, y;
+            if (e.type.includes('touch')) {
+                x = e.touches[0].clientX - rect.left;
+                y = e.touches[0].clientY - rect.top;
+            } else {
+                x = e.clientX - rect.left;
+                y = e.clientY - rect.top;
+            }
+
             ctx1.lineTo(x, y);
             ctx1.stroke();
-            
-            [lastX1, lastY1] = [x, y];
+            ctx1.beginPath();
+            ctx1.moveTo(x, y);
         }
-        
+
         function stopDrawing1() {
             isDrawing1 = false;
+            ctx1.beginPath();
         }
-        
-        // Funciones para la segunda firma
+
+        // Funciones táctiles para primer canvas
+        function handleTouchStart1(e) {
+            if (e.cancelable) e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent("mousedown", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            startDrawing1(mouseEvent);
+        }
+
+        function handleTouchMove1(e) {
+            if (e.cancelable) e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent("mousemove", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            draw1(mouseEvent);
+        }
+
+        // Funciones para el segundo canvas
         function startDrawing2(e) {
             isDrawing2 = true;
-            [lastX2, lastY2] = [e.offsetX, e.offsetY];
-            document.getElementById('signaturePlaceholder2').style.display = 'none';
+            document.getElementById('ph2').classList.add('hidden');
+            draw2(e);
         }
-        
-        function startDrawingTouch2(e) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const rect = signatureCanvas2.getBoundingClientRect();
-            isDrawing2 = true;
-            [lastX2, lastY2] = [touch.clientX - rect.left, touch.clientY - rect.top];
-            document.getElementById('signaturePlaceholder2').style.display = 'none';
-        }
-        
+
         function draw2(e) {
             if (!isDrawing2) return;
+
             e.preventDefault();
-            
-            ctx2.beginPath();
-            ctx2.moveTo(lastX2, lastY2);
-            ctx2.lineTo(e.offsetX, e.offsetY);
-            ctx2.stroke();
-            
-            [lastX2, lastY2] = [e.offsetX, e.offsetY];
-        }
-        
-        function drawTouch2(e) {
-            if (!isDrawing2) return;
-            e.preventDefault();
-            
-            const touch = e.touches[0];
-            const rect = signatureCanvas2.getBoundingClientRect();
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-            
-            ctx2.beginPath();
-            ctx2.moveTo(lastX2, lastY2);
+            const canvas = document.getElementById('signatureCanvas2');
+            const rect = canvas.getBoundingClientRect();
+
+            let x, y;
+            if (e.type.includes('touch')) {
+                x = e.touches[0].clientX - rect.left;
+                y = e.touches[0].clientY - rect.top;
+            } else {
+                x = e.clientX - rect.left;
+                y = e.clientY - rect.top;
+            }
+
             ctx2.lineTo(x, y);
             ctx2.stroke();
-            
-            [lastX2, lastY2] = [x, y];
+            ctx2.beginPath();
+            ctx2.moveTo(x, y);
         }
-        
+
         function stopDrawing2() {
             isDrawing2 = false;
+            ctx2.beginPath();
         }
-        
-        // Función para limpiar firmas
+
+        // Funciones táctiles para segundo canvas
+        function handleTouchStart2(e) {
+            if (e.cancelable) e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent("mousedown", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            startDrawing2(mouseEvent);
+        }
+
+        function handleTouchMove2(e) {
+            if (e.cancelable) e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent("mousemove", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            draw2(mouseEvent);
+        }
+
+        // Limpiar firmas
         function limpiarFirmas() {
-            if (confirm('¿Está seguro de que desea limpiar ambas firmas?')) {
-                // Limpiar primera firma
-                ctx1.clearRect(0, 0, signatureCanvas1.width, signatureCanvas1.height);
-                document.getElementById('signaturePlaceholder1').style.display = 'block';
-                
-                // Limpiar segunda firma
-                ctx2.clearRect(0, 0, signatureCanvas2.width, signatureCanvas2.height);
-                document.getElementById('signaturePlaceholder2').style.display = 'block';
-            }
+            const canvas1 = document.getElementById('signatureCanvas1');
+            const canvas2 = document.getElementById('signatureCanvas2');
+
+            ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+            ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+
+            document.getElementById('ph1').classList.remove('hidden');
+            document.getElementById('ph2').classList.remove('hidden');
         }
-        
-        // Función para descargar PDF
-        function descargarPDF() {
-            if (!validarFormularios()) {
-                alert('Por favor complete todos los campos requeridos antes de generar el PDF.');
+
+        // Generar PDF con formato similar al documento original
+        function generarPDF() {
+            // Validar formularios
+            const forms = document.querySelectorAll('form');
+            let isValid = true;
+
+            forms.forEach(form => {
+                if (!form.checkValidity()) {
+                    isValid = false;
+                    // Marcar campos inválidos
+                    form.querySelectorAll(':invalid').forEach(input => {
+                        input.style.borderColor = '#dc2626';
+                    });
+                }
+            });
+
+            if (!isValid) {
+                alert('Por favor complete todos los campos requeridos correctamente.');
                 return;
             }
-            
-            // Sincronizar datos entre formularios
-            autoCompletarDatos();
-            
-            // Generar PDF
-            generarPDFCompleto();
-        }
-        
-        // Función para generar PDF con ambos documentos
-        function generarPDFCompleto() {
-            try {
-                // Crear un nuevo documento PDF
-                const doc = new jsPDF('p', 'mm', 'a4');
-                
-                // Configuración de márgenes
-                const marginLeft = 15;
-                const marginRight = 15;
-                const pageWidth = 210;
-                const pageHeight = 297;
-                let yPosition = 20;
-                
-                // Obtener datos del formulario de Solicitud
-                const apellidoPaterno = document.getElementById('apellidoPaterno').value;
-                const apellidoMaterno = document.getElementById('apellidoMaterno').value;
-                const nombresSolicitud = document.getElementById('nombresSolicitud').value;
-                const dniSolicitud = document.getElementById('dniSolicitud').value;
-                const domicilioSolicitud = document.getElementById('domicilioSolicitud').value;
-                const especialidad = document.getElementById('especialidad').value;
-                const turno = document.getElementById('turno').value;
-                const modalidad = document.getElementById('modalidad').value;
-                const diaSolicitud = document.getElementById('diaSolicitud').value;
-                const mesSolicitud = document.getElementById('mesSolicitud').value;
-                const anioSolicitud = document.getElementById('anioSolicitud').value;
-                const anioReglamento2 = document.getElementById('anioReglamento2').value;
-                
-                // Obtener datos del formulario de Acta
-                const nombreActa = document.getElementById('nombreActa').value;
-                const dniActa = document.getElementById('dniActa').value;
-                const calleActa = document.getElementById('calleActa').value;
-                const distritoActa = document.getElementById('distritoActa').value;
-                const diaActa = document.getElementById('diaActa').value;
-                const mesActa = document.getElementById('mesActa').value;
-                const anioActa = document.getElementById('anioActa').value;
-                const anioReglamento = document.getElementById('anioReglamento').value;
-                const dniFirmaActa = document.getElementById('dniFirmaActa').value;
-                
-                // Configurar fuente y colores
-                doc.setFont("helvetica", "normal");
-                
-                // ========== PRIMER DOCUMENTO: SOLICITUD DE INSCRIPCIÓN ==========
-                
-                // Encabezado institucional
-                doc.setFontSize(12);
-                doc.setFont("helvetica", "bold");
-                doc.setTextColor(44, 62, 80);
-                doc.text("Instituto de Educación Superior Tecnológico Público", pageWidth / 2, yPosition, { align: "center" });
-                yPosition += 6;
-                doc.text("María Rosario Araoz Pinto", pageWidth / 2, yPosition, { align: "center" });
-                
-                yPosition += 15;
-                
-                // Destinatario
-                doc.setFontSize(14);
-                doc.setTextColor(44, 62, 80);
-                doc.text("SR. DIRECTOR DEL IESTP. \"MARIA ROSARIO ARAOZ PINTO\"", pageWidth / 2, yPosition, { align: "center" });
-                
-                yPosition += 15;
-                
-                // Datos personales
-                doc.setFontSize(11);
-                doc.setFont("helvetica", "normal");
-                
-                // Apellidos y nombres
-                doc.setFont("helvetica", "bold");
-                doc.text("APELLIDO PATERNO:", marginLeft, yPosition);
-                doc.setFont("helvetica", "normal");
-                doc.text(apellidoPaterno, marginLeft + 40, yPosition);
-                
-                doc.setFont("helvetica", "bold");
-                doc.text("APELLIDO MATERNO:", marginLeft + 100, yPosition);
-                doc.setFont("helvetica", "normal");
-                doc.text(apellidoMaterno, marginLeft + 140, yPosition);
-                
-                yPosition += 8;
-                
-                doc.setFont("helvetica", "bold");
-                doc.text("NOMBRES:", marginLeft, yPosition);
-                doc.setFont("helvetica", "normal");
-                doc.text(nombresSolicitud, marginLeft + 25, yPosition);
-                
-                doc.setFont("helvetica", "bold");
-                doc.text("DOCUMENTO DE IDENTIDAD:", marginLeft + 100, yPosition);
-                doc.setFont("helvetica", "normal");
-                doc.text(dniSolicitud, marginLeft + 155, yPosition);
-                
-                yPosition += 8;
-                
-                doc.setFont("helvetica", "bold");
-                doc.text("DOMICILIO ACTUAL:", marginLeft, yPosition);
-                doc.setFont("helvetica", "normal");
-                const domicilioLines = doc.splitTextToSize(domicilioSolicitud, pageWidth - marginLeft - marginRight - 40);
-                doc.text(domicilioLines, marginLeft + 40, yPosition);
-                yPosition += domicilioLines.length * 6;
-                
-                yPosition += 10;
-                
-                // Encabezado de exposición
-                doc.setFont("helvetica", "bold");
-                doc.text("ANTE UD., ME PRESENTO Y EXPONGO:", marginLeft, yPosition);
-                
-                yPosition += 10;
-                
-                // Texto de exposición
-                doc.setFont("helvetica", "normal");
-                const exposicion1 = "Declaro cumplir con los requisitos establecidos en el Reglamento de Admisión, para mi postulación.";
-                doc.text(exposicion1, marginLeft, yPosition);
-                
-                yPosition += 8;
-                const exposicion2 = "Que acato en todos sus términos el Reglamento de Admisión.";
-                doc.text(exposicion2, marginLeft, yPosition);
-                
-                yPosition += 8;
-                const exposicion3 = "Por tanto solicito a Ud., señor Director, se sirva disponer mi inscripción como postulante a la Especialidad de:";
-                doc.text(exposicion3, marginLeft, yPosition);
-                
-                yPosition += 15;
-                
-                // Especialidad y turno
-                doc.setFont("helvetica", "bold");
-                doc.text("Especialidad:", marginLeft, yPosition);
-                doc.setFont("helvetica", "normal");
-                doc.text(especialidad, marginLeft + 30, yPosition);
-                
-                doc.setFont("helvetica", "bold");
-                doc.text("Turno:", marginLeft + 100, yPosition);
-                doc.setFont("helvetica", "normal");
-                doc.text(turno, marginLeft + 125, yPosition);
-                
-                yPosition += 10;
-                
-                // Modalidad
-                doc.setFont("helvetica", "bold");
-                doc.text("en la Modalidad de:", marginLeft, yPosition);
-                doc.setFont("helvetica", "normal");
-                doc.text(modalidad, marginLeft + 45, yPosition);
-                
-                yPosition += 15;
-                
-                // Documentos adjuntos
-                const adjuntoTexto = `Adjunto a la presente los documentos solicitados por el Reglamento de ADMISIÓN 20${anioReglamento2} ____`;
-                doc.text(adjuntoTexto, marginLeft, yPosition);
-                
-                yPosition += 20;
-                
-                // Firma del postulante
-                doc.setFont("helvetica", "bold");
-                doc.text("Firma del Postulante:", marginLeft, yPosition);
-                
-                yPosition += 10;
-                
-                // Dibujar espacio para firma
-                doc.setDrawColor(0);
-                doc.setLineWidth(0.5);
-                doc.rect(marginLeft, yPosition, 80, 25);
-                
-                // Agregar la firma del canvas si existe
-                const signatureDataUrl1 = signatureCanvas1.toDataURL();
-                if (signatureDataUrl1 && document.getElementById('signaturePlaceholder1').style.display === 'none') {
-                    try {
-                        doc.addImage(signatureDataUrl1, 'PNG', marginLeft + 2, yPosition + 2, 76, 21);
-                    } catch (error) {
-                        console.error("Error al agregar firma 1:", error);
-                    }
-                }
-                
-                yPosition += 35;
-                
-                // Fecha
-                const fechaSolicitud = `San Miguel, ${diaSolicitud} de ${mesSolicitud} del 20${anioSolicitud}`;
-                doc.text(fechaSolicitud, marginLeft, yPosition);
-                
-                // ========== SEGUNDO DOCUMENTO: ACTA DE COMPROMISO ==========
-                // Nueva página
-                doc.addPage();
-                yPosition = 20;
-                
-                // Encabezado institucional
-                doc.setFontSize(12);
-                doc.setFont("helvetica", "bold");
-                doc.setTextColor(44, 62, 80);
-                doc.text("Instituto de Educación Superior Tecnológico Público", pageWidth / 2, yPosition, { align: "center" });
-                yPosition += 6;
-                doc.text("María Rosario Araoz Pinto", pageWidth / 2, yPosition, { align: "center" });
-                
-                yPosition += 15;
-                
-                // Título del documento
-                doc.setFontSize(16);
-                doc.setTextColor(44, 62, 80);
-                doc.text("ACTA DE COMPROMISO", pageWidth / 2, yPosition, { align: "center" });
-                
-                yPosition += 15;
-                
-                // Datos personales
-                doc.setFontSize(11);
-                doc.setFont("helvetica", "normal");
-                
-                const linea1 = `Yo, ${nombreActa}, identificado con D.N.I. N° ${dniActa},`;
-                doc.text(linea1, marginLeft, yPosition);
-                
-                yPosition += 8;
-                
-                const linea2 = `domiciliado en la Av., Jr., Calle N° ${calleActa}, Distrito ${distritoActa},`;
-                doc.text(linea2, marginLeft, yPosition);
-                
-                yPosition += 15;
-                
-                // Texto del compromiso
-                const compromisoTexto = `mediante la presente Acta me comprometo completar mi CARPETA DE POSTULANTE de acuerdo a los requisitos solicitados por el REGLAMENTO DE ADMISIÓN 20${anioReglamento} del IESTP "MARIA ROSARIO ARAOZ PINTO", dentro de 72 horas, después de haber sido publicado el cuadro de méritos correspondientes. De no cumplir con este requisito perderé la vacante obtenida en el concurso de admisión sin lugar a reclamos. Para dar fe a dicho compromiso, suscribo la presente Acta.`;
-                
-                const compromisoLines = doc.splitTextToSize(compromisoTexto, pageWidth - marginLeft - marginRight);
-                doc.text(compromisoLines, marginLeft, yPosition);
-                yPosition += compromisoLines.length * 6 + 15;
-                
-                // Fecha
-                const fechaActa = `San Miguel, ${diaActa} de ${mesActa} del 20${anioActa}`;
-                doc.text(fechaActa, marginLeft, yPosition);
-                
-                yPosition += 20;
-                
-                // Espacio para huella digital
-                doc.text("Huella Digital:", marginLeft, yPosition);
-                
-                yPosition += 10;
-                
-                // Dibujar espacio para huella
-                doc.setDrawColor(0);
-                doc.setLineWidth(0.5);
-                doc.rect(marginLeft, yPosition, 50, 40);
-                
-                yPosition += 45;
-                
-                doc.setFontSize(10);
-                doc.text("Índice derecho", marginLeft, yPosition);
-                
-                yPosition += 20;
-                
-                // Firma del acta
-                doc.setFontSize(11);
-                doc.setFont("helvetica", "bold");
-                doc.text("Firma:", marginLeft, yPosition);
-                
-                yPosition += 10;
-                
-                // Dibujar espacio para firma del acta
-                doc.setDrawColor(0);
-                doc.setLineWidth(0.5);
-                const firmaWidth = 80;
-                doc.rect(marginLeft, yPosition, firmaWidth, 25);
-                
-                // Agregar la firma del canvas si existe
-                const signatureDataUrl2 = signatureCanvas2.toDataURL();
-                if (signatureDataUrl2 && document.getElementById('signaturePlaceholder2').style.display === 'none') {
-                    try {
-                        doc.addImage(signatureDataUrl2, 'PNG', marginLeft + 2, yPosition + 2, firmaWidth - 4, 21);
-                    } catch (error) {
-                        console.error("Error al agregar firma 2:", error);
-                    }
-                }
-                
-                yPosition += 35;
-                
-                // Firma y DNI
-                const firmaDNI = `Firma _________________________   DNI. N° ${dniFirmaActa}`;
-                doc.text(firmaDNI, marginLeft, yPosition);
-                
-                // Pie de página
-                const footerY = pageHeight - 20;
-                doc.setFontSize(9);
-                doc.setTextColor(100, 100, 100);
-                doc.text("Documento generado el " + new Date().toLocaleDateString('es-ES'), pageWidth / 2, footerY, { align: "center" });
-                doc.text("Solicitud de Inscripción y Acta de Compromiso", pageWidth / 2, footerY + 5, { align: "center" });
-                
-                // Generar nombre del archivo
-                const nombreArchivo = `Solicitud_${apellidoPaterno}_${apellidoMaterno}_${dniSolicitud}.pdf`;
-                
-                // Guardar PDF
-                doc.save(nombreArchivo);
-                
-                alert(`PDF generado exitosamente: ${nombreArchivo}`);
-                
-            } catch (error) {
-                console.error("Error al generar PDF:", error);
-                alert("Ocurrió un error al generar el PDF. Por favor, intente nuevamente.");
-            }
-        }
-        
-        // Función para auto-completar datos entre formularios
-        function autoCompletarDatos() {
-            // Obtener datos de la Solicitud de Inscripción
-            const apellidoPaterno = document.getElementById('apellidoPaterno').value;
-            const apellidoMaterno = document.getElementById('apellidoMaterno').value;
-            const nombres = document.getElementById('nombresSolicitud').value;
-            const dniSolicitud = document.getElementById('dniSolicitud').value;
-            const domicilio = document.getElementById('domicilioSolicitud').value;
-            
-            // Crear nombre completo para el Acta
-            let nombreCompleto = '';
-            if (apellidoPaterno) nombreCompleto += apellidoPaterno + ' ';
-            if (apellidoMaterno) nombreCompleto += apellidoMaterno + ' ';
-            if (nombres) nombreCompleto += nombres;
-            
-            if (nombreCompleto) {
-                document.getElementById('nombreActa').value = nombreCompleto.trim();
-            }
-            
-            if (dniSolicitud) {
-                document.getElementById('dniActa').value = dniSolicitud;
-                document.getElementById('dniFirmaActa').value = dniSolicitud;
-            }
-            
-            if (domicilio) {
-                // Intentar extraer distrito del domicilio
-                const partesDomicilio = domicilio.split(',');
-                if (partesDomicilio.length > 1) {
-                    document.getElementById('distritoActa').value = partesDomicilio[partesDomicilio.length - 1].trim();
+
+            // Verificar si hay firmas
+            const canvas1 = document.getElementById('signatureCanvas1');
+            const canvas2 = document.getElementById('signatureCanvas2');
+
+            const ctx1 = canvas1.getContext('2d');
+            const ctx2 = canvas2.getContext('2d');
+
+            const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+            const imageData2 = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
+
+            let isEmpty1 = true;
+            let isEmpty2 = true;
+
+            for (let i = 0; i < imageData1.data.length; i += 4) {
+                if (imageData1.data[i + 3] !== 0) {
+                    isEmpty1 = false;
+                    break;
                 }
             }
-            
-            // Poner fechas actuales
-            const fecha = new Date();
-            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
-                          "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"];
-            
-            const dia = fecha.getDate();
-            const mes = meses[fecha.getMonth()];
-            const anio = fecha.getFullYear().toString().substr(-2);
-            
-            // Fechas para Solicitud
-            if (!document.getElementById('diaSolicitud').value) {
-                document.getElementById('diaSolicitud').value = dia;
-            }
-            if (!document.getElementById('mesSolicitud').value) {
-                document.getElementById('mesSolicitud').value = mes;
-            }
-            document.getElementById('anioSolicitud').value = anio;
-            
-            // Fechas para Acta de Compromiso
-            if (!document.getElementById('diaActa').value) {
-                document.getElementById('diaActa').value = dia;
-            }
-            if (!document.getElementById('mesActa').value) {
-                document.getElementById('mesActa').value = mes;
-            }
-            document.getElementById('anioActa').value = anio;
-            
-            // Año de reglamento
-            const anioActual = new Date().getFullYear().toString().substr(-2);
-            document.getElementById('anioReglamento').value = anioActual;
-            document.getElementById('anioReglamento2').value = anioActual;
-            
-            alert('Datos auto-completados. Por favor verifique la información.');
-        }
-        
-        // Función para imprimir documentos
-        function imprimirDocumentos() {
-            if (validarFormularios()) {
-                window.print();
-            }
-        }
-        
-        // Función para validar y enviar
-        function validarYEnviar() {
-            if (validarFormularios()) {
-                const nombre = document.getElementById('nombresSolicitud').value || 
-                              document.getElementById('nombreActa').value;
-                
-                // Verificar que haya firmas
-                const tieneFirma1 = document.getElementById('signaturePlaceholder1').style.display === 'none';
-                const tieneFirma2 = document.getElementById('signaturePlaceholder2').style.display === 'none';
-                
-                if (!tieneFirma1 || !tieneFirma2) {
-                    if (!confirm('No ha firmado en uno o ambos documentos. ¿Desea continuar de todos modos?')) {
-                        return;
-                    }
+
+            for (let i = 0; i < imageData2.data.length; i += 4) {
+                if (imageData2.data[i + 3] !== 0) {
+                    isEmpty2 = false;
+                    break;
                 }
-                
-                alert(`¡Solicitudes enviadas exitosamente!\n\nGracias ${nombre}. Sus documentos han sido registrados en el sistema.`);
             }
+
+            if (isEmpty1 || isEmpty2) {
+                alert('Por favor firme ambos documentos antes de generar el PDF.');
+                return;
+            }
+
+            // Crear PDF
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+
+            // PRIMERA PÁGINA - SOLICITUD
+            doc.setFontSize(16);
+            doc.setTextColor(15, 118, 110);
+            doc.text('Instituto de Educación Superior Tecnológico Público', pageWidth / 2, 20, { align: 'center' });
+            doc.text('María Rosario Araoz Pinto', pageWidth / 2, 26, { align: 'center' });
+
+            doc.setFontSize(14);
+            doc.setTextColor(0, 0, 0);
+            doc.text('SR. DIRECTOR DEL IESTP. "MARIA ROSARIO ARAOZ PINTO"', 20, 40);
+
+            let yPos = 50;
+
+            // Datos del postulante
+            doc.setFontSize(11);
+            doc.text(`APELLIDO PATERNO: ${document.getElementById('apellidoPaterno').value}`, 20, yPos);
+            doc.text(`APELLIDO MATERNO: ${document.getElementById('apellidoMaterno').value}`, 110, yPos);
+            yPos += 8;
+
+            doc.text(`NOMBRES: ${document.getElementById('nombresSolicitud').value}`, 20, yPos);
+            yPos += 8;
+
+            doc.text(`DOCUMENTO DE IDENTIDAD: ${document.getElementById('dniSolicitud').value}`, 20, yPos);
+            doc.text(`DOMICILIO ACTUAL: ${document.getElementById('domicilioSolicitud').value}`, 110, yPos);
+            yPos += 12;
+
+            // Texto de la solicitud
+            doc.setFont(undefined, 'bold');
+            doc.text('ANTE UD., ME PRESENTO Y EXPONGO:', 20, yPos);
+            yPos += 8;
+
+            doc.setFont(undefined, 'normal');
+            doc.text('Declaro cumplir con los requisitos establecidos en el Reglamento de', 20, yPos);
+            yPos += 5;
+            doc.text('Admisión, para mi postulación.', 20, yPos);
+            yPos += 5;
+            doc.text('Que acato en todos sus términos el Reglamento de Admisión.', 20, yPos);
+            yPos += 8;
+
+            doc.text('Por tanto solicito a Ud., señor Director, se sirva disponer mi inscripción como', 20, yPos);
+            yPos += 5;
+            doc.text('postulante a la Especialidad de:', 20, yPos);
+            yPos += 8;
+
+            doc.text(`Especialidad: ${document.getElementById('especialidad').value}`, 20, yPos);
+            yPos += 8;
+
+            doc.text(`Turno: ${document.getElementById('turno').value}`, 20, yPos);
+            doc.text(`Modalidad: ${document.getElementById('modalidad').value}`, 110, yPos);
+            yPos += 8;
+
+            const anioReglamento = document.getElementById('anioReglamento').value || '20......';
+            doc.text(`Adjunto a la presente los documentos solicitados por el Reglamento de ADMISIÓN ${anioReglamento}`, 20, yPos);
+            yPos += 15;
+
+            // Fecha
+            const dia = document.getElementById('dia').value || '......';
+            const mes = document.getElementById('mes').value || '......';
+            const anio = document.getElementById('anio').value || '20......';
+            doc.text(`San Miguel, ${dia} de ${mes} del ${anio}`, pageWidth - 20, yPos, { align: 'right' });
+            yPos += 15;
+
+            // Firma
+            doc.setFont(undefined, 'bold');
+            doc.text('FIRMA DEL POSTULANTE', 20, yPos);
+            yPos += 8;
+
+            // Convertir canvas a imagen y agregar al PDF
+            const firma1 = canvas1.toDataURL('image/png');
+            doc.addImage(firma1, 'PNG', 20, yPos, 80, 40);
+
+            // SEGUNDA PÁGINA - ACTA DE COMPROMISO
+            doc.addPage();
+            yPos = 20;
+
+            doc.setFontSize(16);
+            doc.setTextColor(15, 118, 110);
+            doc.text('Instituto de Educación Superior Tecnológico Público', pageWidth / 2, yPos, { align: 'center' });
+            doc.text('María Rosario Araoz Pinto', pageWidth / 2, yPos + 6, { align: 'center' });
+
+            yPos += 20;
+            doc.setFontSize(18);
+            doc.text('ACTA DE COMPROMISO', pageWidth / 2, yPos, { align: 'center' });
+            yPos += 15;
+
+            // Texto del acta
+            doc.setFontSize(11);
+            doc.setTextColor(0, 0, 0);
+
+            const nombreActa = document.getElementById('nombreActa').value;
+            const dniActa = document.getElementById('dniActa').value;
+            const calleActa = document.getElementById('calleActa').value;
+            const distritoActa = document.getElementById('distritoActa').value;
+            const anioReglamentoActa = document.getElementById('anioReglamentoActa').value || '20......';
+
+            doc.text(`Yo, ${nombreActa} identificado con D.N.I. N° ${dniActa} domiciliado en la Av., Jr., Calle N°`, 20, yPos);
+            yPos += 6;
+            doc.text(`${calleActa} ${distritoActa}`, 20, yPos);
+            yPos += 10;
+
+            const actaText = `mediante la presente Acta me comprometo completar mi CARPETA DE POSTULANTE de acuerdo a los requisitos solicitados por el REGLAMENTO DE ADMISIÓN ${anioReglamentoActa} del IESTP "MARIA ROSARIO ARAOZ PINTO", dentro de 72 horas, después de haber sido publicado el cuadro de méritos correspondientes. De no cumplir con este requisito perderé la vacante obtenida en el concurso de admisión sin lugar a reclamos. Para dar fe a dicho compromiso, suscribo la presente Acta.`;
+
+            const splitText = doc.splitTextToSize(actaText, pageWidth - 40);
+            doc.text(splitText, 20, yPos);
+            yPos += splitText.length * 6 + 10;
+
+            // Fecha del acta
+            const diaActa = document.getElementById('diaActa').value || '......';
+            const mesActa = document.getElementById('mesActa').value || '......';
+            const anioActa = document.getElementById('anioActa').value || '20......';
+            doc.text(`San Miguel, ${diaActa} de ${mesActa} del ${anioActa}`, pageWidth - 20, yPos, { align: 'right' });
+            yPos += 20;
+
+            // Firma y huella
+            doc.setFont(undefined, 'bold');
+            doc.text('Huella Digital', 30, yPos);
+            doc.text('Firma', pageWidth - 50, yPos);
+            yPos += 40;
+
+            doc.setFont(undefined, 'normal');
+            doc.text('Índice derecho', 30, yPos);
+
+            // Convertir segundo canvas a imagen
+            const firma2 = canvas2.toDataURL('image/png');
+            doc.addImage(firma2, 'PNG', pageWidth - 70, yPos - 35, 50, 30);
+
+            const dniFirma = document.getElementById('dniFirma').value || '......';
+            doc.text(`DNI. N° ${dniFirma}`, pageWidth - 50, yPos);
+
+            // Guardar PDF
+            const nombreArchivo = `solicitud_${document.getElementById('dniSolicitud').value}_${Date.now()}.pdf`;
+            doc.save(nombreArchivo);
         }
-        
-        // Función de validación
-        function validarFormularios() {
-            let valido = true;
-            
-            // Validar Solicitud de Inscripción (PRIMERO)
-            const camposSolicitud = [
-                {id: 'apellidoPaterno', msg: 'Apellido paterno'},
-                {id: 'nombresSolicitud', msg: 'Nombres'},
-                {id: 'dniSolicitud', msg: 'Documento de identidad'},
-                {id: 'domicilioSolicitud', msg: 'Domicilio actual'},
-                {id: 'especialidad', msg: 'Especialidad'},
-                {id: 'turno', msg: 'Turno'},
-                {id: 'modalidad', msg: 'Modalidad'},
-                {id: 'diaSolicitud', msg: 'Día en Solicitud'},
-                {id: 'mesSolicitud', msg: 'Mes en Solicitud'}
-            ];
-            
-            camposSolicitud.forEach(campo => {
-                const elemento = document.getElementById(campo.id);
-                if (!elemento.value.trim()) {
-                    valido = false;
-                    elemento.style.borderColor = '#e74c3c';
-                    elemento.style.backgroundColor = '#ffe6e6';
-                } else {
-                    elemento.style.borderColor = '';
-                    elemento.style.backgroundColor = '';
-                }
+
+        // Inicializar cuando se cargue la página
+        window.addEventListener('DOMContentLoaded', () => {
+            initCanvas();
+
+            // Configurar botones
+            document.getElementById('limpiarBtn').addEventListener('click', limpiarFirmas);
+            document.getElementById('generarPdfBtn').addEventListener('click', generarPDF);
+
+            // Restablecer bordes de inputs cuando se corrige
+            document.querySelectorAll('input, select').forEach(input => {
+                input.addEventListener('input', function () {
+                    this.style.borderColor = '#e2e8f0';
+                });
             });
-            
-            // Validar Acta de Compromiso (SEGUNDO)
-            const camposActa = [
-                {id: 'nombreActa', msg: 'Nombre completo en Acta de Compromiso'},
-                {id: 'dniActa', msg: 'DNI en Acta de Compromiso'},
-                {id: 'calleActa', msg: 'Calle en Acta de Compromiso'},
-                {id: 'distritoActa', msg: 'Distrito en Acta de Compromiso'},
-                {id: 'diaActa', msg: 'Día en Acta de Compromiso'},
-                {id: 'mesActa', msg: 'Mes en Acta de Compromiso'},
-                {id: 'dniFirmaActa', msg: 'DNI en firma del Acta'}
-            ];
-            
-            camposActa.forEach(campo => {
-                const elemento = document.getElementById(campo.id);
-                if (!elemento.value.trim()) {
-                    valido = false;
-                    elemento.style.borderColor = '#e74c3c';
-                    elemento.style.backgroundColor = '#ffe6e6';
-                } else {
-                    elemento.style.borderColor = '';
-                    elemento.style.backgroundColor = '';
-                }
+
+            // Ajustar canvas al redimensionar ventana
+            window.addEventListener('resize', () => {
+                setTimeout(initCanvas, 100);
             });
-            
-            if (!valido) {
-                alert('Por favor complete todos los campos requeridos en ambos formularios.');
-                return false;
-            }
-            
-            return true;
-        }
-        
-        // Configurar fechas por defecto al cargar
-        document.addEventListener('DOMContentLoaded', function() {
-            const fecha = new Date();
-            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
-                          "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"];
-            
-            const anio = fecha.getFullYear().toString().substr(-2);
-            
-            // Configurar años
-            document.getElementById('anioSolicitud').value = anio;
-            document.getElementById('anioActa').value = anio;
-            document.getElementById('anioReglamento').value = anio;
-            document.getElementById('anioReglamento2').value = anio;
-            
-            // Configurar mes actual
-            const mesActual = meses[fecha.getMonth()];
-            if (!document.getElementById('mesSolicitud').value) {
-                document.getElementById('mesSolicitud').value = mesActual;
-            }
-            if (!document.getElementById('mesActa').value) {
-                document.getElementById('mesActa').value = mesActual;
-            }
-            
-            // Configurar día actual
-            const diaActual = fecha.getDate();
-            if (!document.getElementById('diaSolicitud').value) {
-                document.getElementById('diaSolicitud').value = diaActual;
-            }
-            if (!document.getElementById('diaActa').value) {
-                document.getElementById('diaActa').value = diaActual;
-            }
-            
-            // Inicializar firmas digitales
-            inicializarFirmas();
-            
-            // Redimensionar firmas cuando cambia el tamaño de la ventana
-            window.addEventListener('resize', function() {
-                inicializarFirmas();
-            });
-        });
-        
-        // Validar formato de DNI
-        document.getElementById('dniSolicitud').addEventListener('input', function() {
-            this.value = this.value.replace(/\D/g, '');
-            if (this.value.length > 8) {
-                this.value = this.value.substring(0, 8);
-            }
-        });
-        
-        document.getElementById('dniActa').addEventListener('input', function() {
-            this.value = this.value.replace(/\D/g, '');
-            if (this.value.length > 8) {
-                this.value = this.value.substring(0, 8);
-            }
-        });
-        
-        document.getElementById('dniFirmaActa').addEventListener('input', function() {
-            this.value = this.value.replace(/\D/g, '');
-            if (this.value.length > 8) {
-                this.value = this.value.substring(0, 8);
-            }
-        });
-        
-        // Sincronizar DNIs en tiempo real (de Solicitud a Acta)
-        document.getElementById('dniSolicitud').addEventListener('blur', function() {
-            if (this.value) {
-                document.getElementById('dniActa').value = this.value;
-                document.getElementById('dniFirmaActa').value = this.value;
-            }
-        });
-        
-        // Sincronizar datos personales de Solicitud a Acta
-        document.getElementById('apellidoPaterno').addEventListener('blur', sincronizarNombre);
-        document.getElementById('apellidoMaterno').addEventListener('blur', sincronizarNombre);
-        document.getElementById('nombresSolicitud').addEventListener('blur', sincronizarNombre);
-        
-        function sincronizarNombre() {
-            const apellidoPaterno = document.getElementById('apellidoPaterno').value;
-            const apellidoMaterno = document.getElementById('apellidoMaterno').value;
-            const nombres = document.getElementById('nombresSolicitud').value;
-            
-            if (apellidoPaterno || apellidoMaterno || nombres) {
-                let nombreCompleto = '';
-                if (apellidoPaterno) nombreCompleto += apellidoPaterno + ' ';
-                if (apellidoMaterno) nombreCompleto += apellidoMaterno + ' ';
-                if (nombres) nombreCompleto += nombres;
-                
-                const nombreCompletado = nombreCompleto.trim();
-                document.getElementById('nombreActa').value = nombreCompletado;
-            }
-        }
-        
-        // Prevenir texto fuera de página
-        function ajustarTextos() {
-            const textos = document.querySelectorAll('.text-content');
-            textos.forEach(texto => {
-                texto.style.wordBreak = 'break-word';
-                texto.style.overflowWrap = 'break-word';
-            });
-        }
-        
-        // Ejecutar ajustes al cargar y al redimensionar
-        window.addEventListener('load', ajustarTextos);
-        window.addEventListener('resize', function() {
-            ajustarTextos();
-            inicializarFirmas();
         });
     </script>
 </body>
+
 </html>

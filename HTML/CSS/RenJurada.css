@@ -1,7 +1,4 @@
-
-/* Unified CSS for Health Declaration Forms */
-/* Combines best elements from DeclaSalud.css and DeclaSaludM.css */
-
+/* RenJurada.css - Actualizado para unificar estilo */
 * {
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
@@ -25,10 +22,12 @@ body {
 }
 
 .header {
-    background-color: #16a34a;
+    background-color: #0f766e;
+    /* Manteniendo el color original del archivo */
     color: white;
     padding: 20px;
     text-align: center;
+    border-bottom: 4px solid #0d9488;
 }
 
 .header h1 {
@@ -36,35 +35,70 @@ body {
     font-size: 24px;
 }
 
-.header .subtitle, .header h2 {
-    font-size: 16px;
-    font-weight: normal;
-    margin-bottom: 5px;
-}
-
 .header-line {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     font-size: 14px;
+    font-weight: 500;
 }
 
 .institution-name {
     text-align: center;
     font-weight: bold;
     margin: 15px 0;
-    color: #16a34a;
+    color: #0f766e;
     font-size: 18px;
 }
 
+.document-container {
+    padding: 25px;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #0f766e;
+    font-size: 15px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: all 0.3s;
+    background: #f8fafc;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #0f766e;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
 .form-section {
-    padding: 20px 30px;
+    padding: 20px 25px;
     border-bottom: 1px solid #eee;
 }
 
 .section-title {
-    color: #16a34a;
-    border-bottom: 2px solid #16a34a;
+    color: #0f766e;
+    border-bottom: 2px solid #0f766e;
     padding-bottom: 8px;
     margin-bottom: 20px;
     font-size: 18px;
@@ -87,29 +121,8 @@ body {
     margin-right: 0;
 }
 
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #444;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: #16a34a;
-    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
-}
-
 .declaration-section {
-    padding: 20px 30px;
+    padding: 20px 25px;
     border-bottom: 1px solid #eee;
 }
 
@@ -120,7 +133,7 @@ input:focus, select:focus, textarea:focus {
 .declaration-text {
     background-color: #f9f9f9;
     padding: 15px;
-    border-left: 4px solid #16a34a;
+    border-left: 4px solid #0f766e;
     margin: 20px 0;
     font-size: 15px;
 }
@@ -129,7 +142,7 @@ input:focus, select:focus, textarea:focus {
     background-color: #f9f9f9;
     padding: 15px;
     border-radius: 4px;
-    border-left: 4px solid #16a34a;
+    border-left: 4px solid #0f766e;
     margin-bottom: 20px;
 }
 
@@ -143,11 +156,132 @@ input:focus, select:focus, textarea:focus {
     width: auto;
     margin-right: 10px;
     margin-top: 5px;
+    transform: scale(1.2);
 }
 
 .checkbox-item label {
     display: inline-block;
     font-weight: normal;
+    color: #444;
+}
+
+.signature-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px dashed #e2e8f0;
+}
+
+.signature-box {
+    border: 2px dashed #cbd5e1;
+    border-radius: 8px;
+    height: 120px;
+    position: relative;
+    background: #f8fafc;
+    margin-top: 10px;
+    cursor: crosshair;
+    overflow: hidden;
+}
+
+.signature-box canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.signature-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #94a3b8;
+    font-size: 16px;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.signature-placeholder.hidden {
+    opacity: 0;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #ddd;
+    flex-wrap: wrap;
+}
+
+.btn,
+button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    flex: 1;
+    min-width: 180px;
+}
+
+.btn-secondary {
+    background-color: #64748b;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #475569;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background-color: #0f766e;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #0d9488;
+    transform: translateY(-2px);
+}
+
+.required::after {
+    content: " *";
+    color: #dc2626;
+}
+
+.footnote {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    font-size: 14px;
+    color: #666;
 }
 
 .warning-box {
@@ -160,241 +294,114 @@ input:focus, select:focus, textarea:focus {
     font-size: 14px;
 }
 
-.signature-section {
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-top: 1px solid #ddd;
-    margin-top: 20px;
+/* Estilos para el formato tipo carta */
+.document-title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #0f766e;
 }
 
-.signature-box {
-    border: 1px dashed #aaa;
-    height: 100px;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: white;
-    position: relative;
-    cursor: crosshair;
+.field-row {
     display: flex;
-    justify-content: center;
+    margin: 10px 0;
     align-items: center;
-    color: #777;
-    font-style: italic;
+    gap: 10px;
 }
 
-.signature-box canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    cursor: crosshair;
+.field-row label {
+    min-width: 200px;
+    margin: 0;
+    font-weight: normal;
+    color: #333;
 }
 
-.signature-placeholder {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #aaa;
-    font-style: italic;
-    pointer-events: none;
+.field-row input {
+    flex: 1;
+    border: none;
+    border-bottom: 2px solid #cbd5e1;
+    border-radius: 0;
+    padding: 8px 0;
+    background: transparent;
+}
+
+.field-row input:focus {
+    border-bottom-color: #0f766e;
+    box-shadow: none;
+}
+
+.text-block {
+    margin: 15px 0;
+    line-height: 1.8;
+    text-align: justify;
+}
+
+.formatted-text {
+    margin: 20px 0;
+    line-height: 1.8;
+}
+
+.formatted-text strong {
+    color: #0f766e;
+}
+
+.firma-section {
+    margin-top: 40px;
+    text-align: right;
+}
+
+.firma-label {
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #0f766e;
 }
 
 .date-inputs {
     display: flex;
-    align-items: center;
     gap: 10px;
+    margin: 10px 0;
 }
 
 .date-inputs input {
-    flex: 0 0 auto;
+    width: 100px;
 }
 
-.date-inputs label {
-    margin: 0;
-    white-space: nowrap;
-}
-
-.page-break {
-    padding: 20px 30px;
-    border-bottom: 1px solid #eee;
-    page-break-before: always;
-    margin-top: 40px;
-    padding-top: 30px;
-    border-top: 1px solid #ccc;
-}
-
-.fingerprint-section {
-    margin-top: 30px;
-    text-align: center;
-}
-
-.fingerprint-box {
+.inline-field {
     display: inline-block;
     width: 200px;
-    height: 150px;
-    border: 2px solid #ddd;
-    border-radius: 4px;
-    margin-top: 10px;
-    background-color: #fdfdfd;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s;
+    margin: 0 5px;
 }
 
-.fingerprint-box:hover {
-    border-color: #16a34a;
-    background-color: #f0f9f0;
+.text-with-input {
+    margin: 10px 0;
 }
 
-.fingerprint-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    background-color: white;
+.text-with-input input {
+    display: inline-block;
+    width: 200px;
+    margin: 0 5px;
 }
 
-.fingerprint-placeholder {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #aaa;
-    font-style: italic;
-    text-align: center;
-    width: 100%;
-    padding: 10px;
-}
-
-.fingerprint-label {
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
-    text-align: center;
-    font-size: 14px;
-    color: #777;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 3px 0;
-}
-
-.upload-controls {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 15px;
-    flex-wrap: wrap;
-}
-
-.upload-btn, .remove-btn {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s;
-}
-
-.upload-btn {
-    background-color: #16a34a;
-    color: white;
-}
-
-.upload-btn:hover {
-    background-color: #15803d;
-}
-
-.remove-btn {
-    background-color: #dc3545;
-    color: white;
-}
-
-.remove-btn:hover {
-    background-color: #c82333;
-}
-
-.upload-instructions {
-    margin-top: 15px;
-    font-size: 14px;
-    color: #666;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.button-group {
-    display: flex;
-    justify-content: space-between;
+.carta-content {
     padding: 20px;
-    background-color: #f8f9fa;
-    border-top: 1px solid #ddd;
-    flex-wrap: wrap;
-    gap: 10px;
 }
 
-.btn, button {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s;
-    flex: 1;
-    min-width: 180px;
+.destinatario {
+    margin-bottom: 30px;
 }
 
-.btn-secondary, .btn-secondary {
-    background-color: #e9ecef;
-    color: #495057;
+.cuerpo-carta {
+    margin: 25px 0;
 }
 
-.btn-secondary:hover {
-    background-color: #dee2e6;
+.despedida {
+    margin: 40px 0 20px 0;
 }
 
-.btn-danger, .btn-danger {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-}
-
-.btn-primary, .btn-primary {
-    background-color: #16a34a;
-    color: white;
-}
-
-.btn-primary:hover {
-    background-color: #15803d;
-}
-
-.btn-success, .btn-success {
-    background-color: #16a34a;
-    color: white;
-}
-
-.btn-success:hover {
-    background-color: #15803d;
-}
-
-.footnote {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #ddd;
-    font-size: 14px;
-    color: #666;
-}
-
-.required {
-    color: #e74c3c;
-}
-
-.file-input {
-    display: none;
+.fecha-lugar {
+    text-align: right;
+    margin: 30px 0;
 }
 
 /* Print styles */
@@ -408,7 +415,9 @@ input:focus, select:focus, textarea:focus {
         box-shadow: none !important;
     }
 
-    .button-group, .btn, .upload-controls, .upload-btn, .remove-btn {
+    .button-group,
+    .btn,
+    button {
         display: none !important;
     }
 
@@ -416,7 +425,7 @@ input:focus, select:focus, textarea:focus {
         transform: scale(1.2);
     }
 
-    .fingerprint-box {
+    .signature-box {
         border: 1px solid #000 !important;
     }
 }
@@ -427,23 +436,53 @@ input:focus, select:focus, textarea:focus {
         margin: 10px;
     }
 
+    .grid-2 {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
     .form-group {
         min-width: 100%;
         margin-right: 0;
     }
 
-    .form-section, .declaration-section, .page-break {
+    .form-section,
+    .declaration-section,
+    .carta-content {
         padding: 15px;
     }
 
     .button-group {
         flex-direction: column;
+        padding: 15px;
     }
 
-    .btn, button {
+    .btn,
+    button {
         width: 100%;
         margin-bottom: 10px;
         min-width: auto;
+    }
+
+    .header-line {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+    }
+
+    .field-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .field-row label {
+        min-width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .field-row input {
+        width: 100%;
     }
 
     .date-inputs {
@@ -451,17 +490,31 @@ input:focus, select:focus, textarea:focus {
         align-items: stretch;
     }
 
-    .date-inputs label {
-        margin-bottom: 5px;
+    .date-inputs input {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
     }
 
-    .upload-controls {
-        flex-direction: column;
-        align-items: center;
+    .header {
+        padding: 15px;
     }
 
-    .header-line {
-        flex-direction: column;
-        gap: 5px;
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .carta-content {
+        padding: 15px;
+    }
+
+    input,
+    select,
+    textarea {
+        padding: 10px 12px;
     }
 }

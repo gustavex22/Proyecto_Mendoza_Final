@@ -1,0 +1,381 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Document Container */
+.document-container {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    padding: 0;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 4px solid #0d9488;
+}
+
+.header-line {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.header h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.header h2 {
+    font-size: 18px;
+    font-weight: 400;
+    opacity: 0.95;
+}
+
+/* Formularios */
+form {
+    padding: 25px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #0f766e;
+    font-size: 15px;
+}
+
+input,
+select {
+    padding: 12px 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: all 0.3s;
+    background: #f8fafc;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #0f766e;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+/* Sección de firma */
+.signature-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px dashed #e2e8f0;
+}
+
+.signature-box {
+    border: 2px dashed #cbd5e1;
+    border-radius: 8px;
+    height: 150px;
+    position: relative;
+    background: #f8fafc;
+    margin-top: 10px;
+    cursor: crosshair;
+    overflow: hidden;
+}
+
+.signature-box canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.signature-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #94a3b8;
+    font-size: 16px;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.signature-placeholder.hidden {
+    opacity: 0;
+}
+
+/* Botones */
+.button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 14px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 180px;
+}
+
+button:first-of-type {
+    background: #64748b;
+    color: white;
+}
+
+button:first-of-type:hover {
+    background: #475569;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+}
+
+button:last-of-type {
+    background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+    color: white;
+}
+
+button:last-of-type:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .header-line {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .header h2 {
+        font-size: 16px;
+    }
+
+    form {
+        padding: 20px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    button {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .header {
+        padding: 15px;
+    }
+
+    .header h1 {
+        font-size: 18px;
+    }
+
+    .header h2 {
+        font-size: 15px;
+    }
+
+    form {
+        padding: 15px;
+    }
+
+    input,
+    select {
+        padding: 10px 12px;
+    }
+}
+
+/* Estados */
+.required::after {
+    content: " *";
+    color: #dc2626;
+}
+
+/* Separador entre secciones */
+.section-divider {
+    height: 2px;
+    background: linear-gradient(to right, transparent, #0f766e, transparent);
+    margin: 25px 0;
+}
+
+/* Nuevos estilos para el formato tipo PDF */
+.document-title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #0f766e;
+}
+
+.saludo {
+    margin: 20px 0 30px 0;
+    font-weight: bold;
+}
+
+.text-block {
+    margin: 15px 0;
+    line-height: 1.8;
+    text-align: justify;
+}
+
+.field-row {
+    display: flex;
+    margin: 10px 0;
+    align-items: center;
+    gap: 10px;
+}
+
+.field-row label {
+    min-width: 200px;
+    margin: 0;
+    font-weight: normal;
+    color: #333;
+}
+
+.field-row input {
+    flex: 1;
+    border: none;
+    border-bottom: 2px solid #cbd5e1;
+    border-radius: 0;
+    padding: 8px 0;
+    background: transparent;
+}
+
+.field-row input:focus {
+    border-bottom-color: #0f766e;
+    box-shadow: none;
+}
+
+.formatted-text {
+    margin: 20px 0;
+    line-height: 1.8;
+}
+
+.formatted-text strong {
+    color: #0f766e;
+}
+
+.firma-section {
+    margin-top: 40px;
+    text-align: right;
+}
+
+.firma-label {
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #0f766e;
+}
+
+.date-inputs {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.date-inputs input {
+    width: 100px;
+}
+
+.inline-field {
+    display: inline-block;
+    width: 200px;
+    margin: 0 5px;
+}
+
+.text-with-input {
+    margin: 10px 0;
+}
+
+.text-with-input input {
+    display: inline-block;
+    width: 200px;
+    margin: 0 5px;
+}
+
+/* Estilos específicos para el formato de carta */
+.carta-content {
+    padding: 20px;
+}
+
+.destinatario {
+    margin-bottom: 30px;
+}
+
+.cuerpo-carta {
+    margin: 25px 0;
+}
+
+.despedida {
+    margin: 40px 0 20px 0;
+}
+
+.fecha-lugar {
+    text-align: right;
+    margin: 30px 0;
+}
