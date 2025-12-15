@@ -1,26 +1,23 @@
 <?php
-// procesar_registro.php
 
-// --- 1. CONFIGURACIÓN DE LA BASE DE DATOS ---
+
+
 $servername = "localhost";
-$username = "root";       // Usuario por defecto de XAMPP
-$password = "";           // Contraseña por defecto (vacía en XAMPP)
-$dbname = "Ingresopg";    // Tu base de datos
+$username = "root";
+$password = "";
+$dbname = "Ingresopg";
 
-// Crear conexión
+
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Verificar conexión
+
 if ($conn->connect_error) {
     die("Fallo en la conexión: " . $conn->connect_error);
 }
 
-// --- 2. RECIBIR DATOS DEL FORMULARIO ---
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // A) Datos Personales
-    // Nota: El DNI en tu base de datos es AUTO_INCREMENT, pero lo ideal es insertar el número real.
-    // Intentaremos insertar el valor del formulario.
     $dni = $_POST['dni'];
     $nombres = $_POST['nombres'];
     $apellido_paterno = $_POST['apellido_paterno'];
@@ -31,17 +28,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $celular = $_POST['celular'];
     $direccion = $_POST['direccion_domicilio'];
 
-    // Datos extras para la ficha visual (aunque no estén en la tabla Estudiante)
     $carrera = $_POST['carrera'];
     $turno = $_POST['turno'];
 
-    // B) Datos del Apoderado (Inicializamos en NULL)
+
     $dni_apod = null;
     $nom_apod = null;
     $ape_pat_apod = null;
     $ape_mat_apod = null;
 
-    // Verificamos si es menor para guardar datos del apoderado
+
     $es_menor = ($edad < 18);
 
     if ($es_menor) {
@@ -51,8 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ape_mat_apod = $_POST['apellido_materno_apoderado'];
     }
 
-    // --- 3. INSERTAR EN TABLA 'ESTUDIANTE' ---
-    // Preparamos la consulta SQL
+
     $sql_estudiante = "INSERT INTO Estudiante (
         DNI, nombre, Apellido_Paterno, Apellido_Materno, edad, fecha_nacimiento, 
         Correo_Electronico, Celular, direccion_de_domicilio, 
@@ -61,8 +56,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt = $conn->prepare($sql_estudiante);
 
-    // Vinculamos parámetros (i=entero, s=string)
-    // Orden: i s s s i s s i s s s s s
     $stmt->bind_param(
         "isssississsss",
         $dni,
@@ -81,22 +74,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     );
 
     if ($stmt->execute()) {
-        // --- 4. INSERTAR EN TABLA 'DOCUMENTOS' (BLOBs) ---
 
-        // Leemos el contenido binario de los archivos subidos
-        // NOTA: Tu tabla 'Documentos' solo tiene campos para las declaraciones juradas y acta.
-        // Los archivos de 'DNI Escaneado' y 'Voucher' no tienen columna en tu script SQL, 
-        // así que por ahora guardaremos solo las declaraciones juradas.
 
         $archivo_dj_salud_blob = file_get_contents($_FILES['archivo_dj_salud']['tmp_name']);
         $archivo_dj_dinero_blob = file_get_contents($_FILES['archivo_dj_dinero']['tmp_name']);
         $archivo_dj_Certificado_blob = file_get_contents($_FILES['archivo_certificado']['tmp_name']);
 
-        // Variable NULL auxiliar para bind_param
         $null = null;
-
-        // Preparamos la consulta dependiendo de la edad
-        // Insertamos el contenido del archivo en la columna correspondiente y NULL en las otras
 
         $sql_docs = "INSERT INTO Documentos (
             No_devolucion_de_dinero_Menor_de_edad, 
@@ -110,25 +94,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_docs = $conn->prepare($sql_docs);
 
         if ($es_menor) {
-            // MENOR: Llenamos las 2 primeras columnas (Menor), las otras 2 (Mayor) van NULL
+
             $stmt_docs->bind_param("bbbbbi", $null,$null, $null, $null, $null, $dni);
-            // Enviamos los datos pesados (BLOB)
-            $stmt_docs->send_long_data(0, $archivo_dj_dinero_blob);     // No devolucion Menor
-            $stmt_docs->send_long_data(1, $archivo_dj_salud_blob);  // Salud Menor
+
+            $stmt_docs->send_long_data(0, $archivo_dj_dinero_blob);
+            $stmt_docs->send_long_data(1, $archivo_dj_salud_blob);
             $stmt_docs->send_long_data(4, $archivo_dj_Certificado_blob);  
         } else {
-            // MAYOR: Las 2 primeras columnas (Menor) van NULL, llenamos las otras 2 (Mayor)
+
             $stmt_docs->bind_param("bbbbbi", $null, $null,$null, $null, $null, $dni);
-            // Enviamos los datos pesados (BLOB)
-            $stmt_docs->send_long_data(2, $archivo_dj_dinero_blob); // No devolucion Mayor
-            $stmt_docs->send_long_data(3, $archivo_dj_salud_blob);  // Salud Mayor
+
+            $stmt_docs->send_long_data(2, $archivo_dj_dinero_blob);
+            $stmt_docs->send_long_data(3, $archivo_dj_salud_blob);
             $stmt_docs->send_long_data(4, $archivo_dj_Certificado_blob);
         }
 
         $stmt_docs->execute();
         $stmt_docs->close();
 
-        // --- 5. GENERAR FICHA VISUAL (FRONTEND DE RESPUESTA) ---
+
         $codigo_inscripcion = "INS-2025-" . $dni;
 
 ?>
@@ -162,7 +146,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="ficha max-w-2xl mx-auto bg-white p-8 md:p-12 shadow-2xl rounded-sm relative">
 
-                <!-- Encabezado -->
+
                 <div class="flex justify-between items-center border-b-2 border-gray-800 pb-4 mb-6">
                     <div class="flex items-center gap-3">
                         <div class="text-3xl text-green-700"><i class="fas fa-university"></i></div>
@@ -177,7 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
 
-                <!-- Mensaje de Éxito -->
+
                 <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
                     <p class="font-bold">¡Registro Exitoso!</p>
                     <p>Los datos han sido guardados correctamente en la base de datos.</p>
@@ -187,7 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <h2 class="text-2xl font-bold text-gray-800 underline decoration-2 decoration-green-500 underline-offset-4">CONSTANCIA DE INSCRIPCIÓN</h2>
                 </div>
 
-                <!-- Resumen de Datos -->
+
                 <div class="grid grid-cols-2 gap-y-4 gap-x-8 text-sm text-gray-700 mb-6">
                     <div class="col-span-2 md:col-span-1">
                         <p class="text-xs text-gray-500 uppercase font-semibold">Postulante</p>
@@ -211,7 +195,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
 
-                <!-- Sección Apoderado (Solo si existe) -->
+
                 <?php if ($es_menor): ?>
                     <div class='mt-4 p-3 bg-orange-50 border border-orange-200 rounded'>
                         <h3 class='font-bold text-orange-800 text-sm border-b border-orange-200 pb-1 mb-2'>DATOS DEL APODERADO</h3>
@@ -220,7 +204,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 <?php endif; ?>
 
-                <!-- Botones -->
                 <div class="mt-12 pt-4 border-t border-gray-300 text-center">
                     <div class="no-print flex justify-center gap-4 mt-6">
                         <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow flex items-center gap-2 cursor-pointer">
@@ -239,7 +222,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php
 
     } else {
-        // Error al insertar estudiante
+
         echo "<div style='color:red; text-align:center; margin-top:50px;'>";
         echo "<h1>Error al registrar:</h1>";
         echo "<p>" . $stmt->error . "</p>";
@@ -250,7 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
     $conn->close();
 } else {
-    // Si intentan entrar directo sin POST
+
     header("Location: registro.php");
     exit();
 }

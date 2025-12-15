@@ -1,9 +1,9 @@
 
 <?php
 
-// CÓDIGO PHP PURO que se ejecuta cuando se presiona el botón
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_inscripcion'])) {
-    // Esto se ejecuta EN EL SERVIDOR cuando se presiona el botón
+
     echo "<div style='background: #d4edda; padding: 15px; margin: 15px 0; border-radius: 5px;'>";
     echo "<h3>¡Procesando inscripción!</h3>";
     echo "<p>Fecha y hora en el servidor: " . date('d/m/Y H:i:s') . "</p>";
@@ -11,8 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_inscripcion'])) {
     echo "<p>Serás redirigido al formulario completo...</p>";
     echo "</div>";
 
-    // Aquí podrías redirigir a otro archivo PHP
-    // header('Location: formulario-completo.php');
-    // exit();
+
 }
 ?>

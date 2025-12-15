@@ -69,7 +69,6 @@
 
             <form action="procesar_registro.php" method="POST" enctype="multipart/form-data" class="space-y-8">
 
-                <!-- 1. DATOS DEL POSTULANTE -->
                 <div>
                     <h3 class="section-title text-lg mb-4">1. Datos Personales</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -91,7 +90,7 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm border p-2 focus:ring-green-500 focus:border-green-500"
                                 required>
                         </div>
-                        <!-- CORRECCIÓN: Nombres únicos para apellidos -->
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Apellido Paterno *</label>
                             <input type="text" name="apellido_paterno"
@@ -130,7 +129,6 @@
                     </div>
                 </div>
 
-                <!-- ALERTA MENOR DE EDAD -->
                 <div id="alerta-menor" class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded">
                     <div class="flex">
                         <div class="flex-shrink-0"><i class="fas fa-exclamation-triangle text-orange-500"></i></div>
@@ -142,7 +140,7 @@
                     </div>
                 </div>
 
-                <!-- 2. DATOS DEL APODERADO -->
+
                 <div id="seccion-apoderado">
                     <h3 class="section-title text-lg mb-4">2. Datos del Apoderado (Padre/Madre)</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
@@ -171,7 +169,7 @@
                     </div>
                 </div>
 
-                <!-- 3. CARRERA -->
+
                 <div>
                     <h3 class="section-title text-lg mb-4">3. Selección de Especialidad</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -202,7 +200,7 @@
                     </div>
                 </div>
 
-                <!-- 4. DOCUMENTACIÓN -->
+
                 <div>
                     <h3 class="section-title text-lg mb-4">4. Carga de Documentos</h3>
 
@@ -292,7 +290,7 @@
                 edad--;
             }
 
-            // Asignar la edad calculada al input visible
+
             inputEdad.value = edad;
 
             const esMenor = edad < 18;
@@ -319,7 +317,7 @@
                 seccionApoderado.style.display = 'none';
                 inputsApoderado.forEach(input => input.required = false);
 
-                // Limpiar campos de apoderado si cambia de opinión
+
                 inputsApoderado.forEach(input => input.value = '');
 
                 linkSalud.href = "../HTML/DeclaSalud.html";
